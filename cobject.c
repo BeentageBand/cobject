@@ -25,5 +25,15 @@ struct Object * Object_Cast(struct Class const * const cast_vtbl, struct Object 
 
 		cast_class = cast_class->base;
 	}
-	return caste_obj;
+	return casted_obj;
+}
+
+void Object_Delete(struct Object * const object)
+{
+	Isnt_Nullptr(object, );
+
+	if(NULL != object->vtbl)
+	{
+		object->vtbl->destroy(object);
+	}
 }
