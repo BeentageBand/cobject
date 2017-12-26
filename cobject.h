@@ -30,13 +30,11 @@ extern struct Object * Object_Cast(struct Class const * const cast_class,
 		struct Object * const object);
 
 extern void Object_Delete(struct Object * const object);
+#define _delete(_obj) Object_Delete(&(_obj)->Object)
 
-#define _cast(_class, _object) \
-	(CAT(_class, _T) *) Object_Cast(&CAT(_class, _Class).Class, \
-			&(_object)->Object)
+#define _cast(_class, _obj) (union _class *) Object_Cast(&CAT(_class, _Class).Class, &(_obj)->Object)
 
-#define _delete(_object) Object_Delete((struct Object *)(_object))
+#define _using(_class, _obj, _method, ...) CAT(_class, _Class)._method(&(_obj)->_class, \
+		__VA__ARGS__)
 
-#define _using(_class, _object, _method, ...) 
-		
 #endif /*COBJECT_H_*/

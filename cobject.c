@@ -1,3 +1,4 @@
+#define COBJECT_IMPLEMENTATION
 #include "cobject.h"
 
 void Object_Init(struct Object * const object, struct Class * vtbl, size_t const vtbl_size)
