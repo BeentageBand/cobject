@@ -63,7 +63,7 @@ do{                                                        \
 
 #ifdef DEBUG_THROW
 #define _throw(except) \
-Dbg_Error("Exception thrown = %s - %d",  STR(except), (int)(except)) \
+Dbg_Fault("Exception thrown = %s - %d",  STR(except), (int)(except)) \
 
 #else
 #define _throw(except) CException_Throw((int)(except));
