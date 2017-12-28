@@ -33,8 +33,12 @@ void Object_Delete(struct Object * const object)
 {
 	Isnt_Nullptr(object, );
 
-	if(NULL != object->vtbl)
+	struct Class * class = object->vbtl;
+
+	while(NULL != class)
 	{
-		object->vtbl->destroy(object);
+		class->destroy(object);
+		class = object->vtbl->base;
 	}
+		
 }
