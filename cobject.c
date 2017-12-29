@@ -33,7 +33,7 @@ void Object_Delete(struct Object * const object)
 {
 	Isnt_Nullptr(object, );
 
-	struct Class * class = object->vbtl;
+	struct Class * class = object->vtbl;
 
 	while(NULL != class)
 	{
