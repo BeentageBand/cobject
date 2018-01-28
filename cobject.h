@@ -12,6 +12,11 @@
 #include "xmac.h"
 #include "std_reuse.h"
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+
 struct Object
 {
 	struct Class * vtbl;
@@ -30,6 +35,10 @@ extern struct Object * Object_Cast(struct Class const * const cast_class,
 		struct Object * const object);
 
 extern void Object_Delete(struct Object * const object);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define _delete(_obj) Object_Delete(&(_obj)->Object)
 
