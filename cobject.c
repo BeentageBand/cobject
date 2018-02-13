@@ -1,4 +1,7 @@
 #define COBJECT_IMPLEMENTATION
+#define Dbg_FID DBG_FID_DEF(COBJECT_FID, 0)
+
+#include "dbg_log.h"
 #include "cobject.h"
 
 void Object_Init(struct Object * const object, struct Class * vtbl, size_t const vtbl_size)
@@ -8,6 +11,7 @@ void Object_Init(struct Object * const object, struct Class * vtbl, size_t const
 		memcpy(vtbl + 1U, object->vtbl + 1, vtbl_size - sizeof(struct Class));
 	}
 
+	vtbl->base = object->vtbl;
 	object->vtbl = vtbl;
 }
 
