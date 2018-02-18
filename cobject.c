@@ -6,7 +6,7 @@
 
 void Object_Init(struct Object * const object, struct Class * vtbl, size_t const vtbl_size)
 {
-	if(NULL != object->vtbl)
+	if(NULL != object->vtbl && vtbl_size)
 	{
 		memcpy(vtbl + 1U, object->vtbl + 1, vtbl_size - sizeof(struct Class));
 	}
