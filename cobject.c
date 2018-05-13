@@ -6,43 +6,43 @@
 
 void Object_Init(struct Object * const object, struct Class * vtbl, size_t const vtbl_size)
 {
-	if(NULL != object->vtbl && vtbl_size)
-	{
-		memcpy(vtbl + 1U, object->vtbl + 1, vtbl_size - sizeof(struct Class));
-	}
+   if(NULL != object->vtbl && vtbl_size)
+   {
+      memcpy(vtbl + 1U, object->vtbl + 1, vtbl_size - sizeof(struct Class));
+   }
 
-	vtbl->base = object->vtbl;
-	object->vtbl = vtbl;
+   vtbl->base = object->vtbl;
+   object->vtbl = vtbl;
 }
 
 struct Object * Object_Cast(struct Class const * const cast_vtbl, struct Object * const object)
 {
-	struct Object * casted_obj = NULL;
-	struct Class const * cast_class = object->vtbl;
+   struct Object * casted_obj = NULL;
+   struct Class const * cast_class = object->vtbl;
 
-	while(NULL != cast_class)
-	{
-		if(cast_vtbl == cast_class)
-		{
-			casted_obj = object;
-			break;
-		}
+   while(NULL != cast_class)
+   {
+      if(cast_vtbl == cast_class)
+      {
+         casted_obj = object;
+         break;
+      }
 
-		cast_class = cast_class->base;
-	}
-	return casted_obj;
+      cast_class = cast_class->base;
+   }
+   return casted_obj;
 }
 
 void Object_Delete(struct Object * const object)
 {
-	Isnt_Nullptr(object, );
+   Isnt_Nullptr(object, );
 
-	struct Class * class = object->vtbl;
+   struct Class * class = object->vtbl;
 
-	while(NULL != class)
-	{
-		class->destroy(object);
-		class = object->vtbl->base;
-	}
-		
+   while(NULL != class)
+   {
+      class->destroy(object);
+      class = object->vtbl->base;
+   }
+      
 }
