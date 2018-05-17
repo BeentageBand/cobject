@@ -47,4 +47,6 @@ extern void Object_Delete(struct Object * const object);
 #define _using(_class, _obj, _method, ...) CAT(_class, _Class)._method(&(_obj)->_class, \
       __VA__ARGS__)
 
+#define _call(_class, _obj, _method, ...) (_obj)->_class.vtbl->_method(&(_obj)->_class, __VA__ARGS__)
+
 #endif /*COBJECT_H_*/
