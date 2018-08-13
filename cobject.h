@@ -49,4 +49,6 @@ extern void Object_Delete(struct Object * const object);
 
 #define _call(_class, _obj, _method, ...) (_obj)->_class.vtbl->_method(&(_obj)->_class, __VA__ARGS__)
 
+#define _clone(_obj, _proto) if(NULL != _obj.vtbl) return; memcpy(_obj, &_proto, sizeof(_proto))
+
 #endif /*COBJECT_H_*/
