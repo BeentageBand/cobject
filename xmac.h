@@ -4,6 +4,9 @@
 #define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 #define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
 
+#define PRIMITIVE_STR(a) #a
+#define STR(a) PRIMITIVE_STR(a)
+
 #define IFF(c) PRIMITIVE_CAT(IFF_,c)
 #define IFF_0(t, ...) __VA_ARGS__
 #define IFF_1(t, ...) t
