@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<class name="State_Machine">
+    <member name="curr_stid" type_t="uint8_t" access="private"/>
+    <member name="st_chart" type_t="struct St_Chart" is_ref="const" access="private"/>
+    <method access="public" return_t="void" name="dispatch">
+        <param type_t="int const" name="signal"/>
+    </method>
+</class>
