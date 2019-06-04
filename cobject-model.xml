@@ -1,8 +1,18 @@
 <?xml version="1.0"?>
-<class name="State_Machine">
-    <member name="curr_stid" type_t="uint8_t" access="private"/>
-    <member name="st_chart" type_t="struct St_Chart" is_ref="const" access="private"/>
-    <method access="public" return_t="void" name="dispatch">
-        <param type_t="int const" name="signal"/>
-    </method>
+<domain>
+<class name="Shape">
+    <member name="name" type_t="char const" is_ref="const"/>
+    <method access="public" return_t="char const *" name="get_name"/>
+    <method access="public" qualifier="override" return_t="void" name="print_info"/>
 </class>
+<class name="Rectangle" isa="Shape">
+    <member name="height" type_t="float"/>
+    <member name="width" type_t="float"/>
+    <method access="public" return_t="float" name="get_height"/>
+    <method access="public" return_t="float" name="get_width"/>
+</class>
+<class name="Circle" isa="Shape">
+    <member name="radius" type_t="float"/>
+    <method access="public" return_t="float" name="get_radius"/>
+</class>
+</domain>

@@ -2,23 +2,52 @@ import xml.etree.ElementTree as ET
 from class_data import *
 from class_data_parser import *
 from class_member_data import *
+from class_constructor_data import *
 from class_method_data import *
 from method_param_data import *
 
 class ClassDataParser:
     def __init__(self, xml):
-        self.root = ET.parse(xml)
+        self.tree= ET.parse(xml)
+        self.root = self.tree.getroot()
+        self.domain = {}
+        for item in self.root:
+            print item.tag, item.attrib
     def generate(self):
-        class_builder = ClassDataBuilder()
-        for c in self.root.iter('class'):
-            class_builder.with_name(c.attrib['name'])
-            class_builder.with_members(self.gen_class_members(c))
-            class_builder.with_methods(self.gen_class_methods(c))
+        classes = []
+        for c in self.root.findall('class'):
             try:
-                class_builder.with_isa(c.attrib['isa'])
+                clazz = self.gen_class(c.attrib['name'])
+                classes.append(clazz)
             except KeyError:
                 pass
-        return  class_builder.build()
+        return classes
+    def gen_class(self, key):
+        clazz = self.domain.get(key)
+        if clazz is not None:
+            return clazz
+        query = "./class[@name='%s']" % (key)
+        c = self.root.find(query)
+        class_builder = ClassDataBuilder()
+        try:
+            class_builder.with_name(c.attrib['name'])
+            class_builder.with_isa(self.gen_class(c.attrib['isa']))
+        except KeyError:
+            pass
+        class_builder.with_constructors(self.gen_class_constructors(c))
+        class_builder.with_members(self.gen_class_members(c))
+        class_builder.with_methods(self.gen_class_methods(c))
+        clazz = class_builder.build()
+        self.domain[key] = clazz
+        return clazz
+    def gen_class_constructors(self, given_class):
+        class_constructors = []
+        for constructor in given_class.iter('constructor'):
+            constructor_builder = ClassConstructorDataBuilder()
+            constructor_builder.with_name(constructor.attrib['name'])
+            constructor_builder.with_params(self.gen_method_params(constructor))
+            class_constructors.append(constructor_builder.build())
+        return class_constructors
     def gen_class_members(self, given_class):
         class_members = []
         for member in given_class.iter('member'):

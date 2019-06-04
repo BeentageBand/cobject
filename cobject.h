@@ -26,10 +26,10 @@ struct Class
 {
    void (* destroy)(struct Object * const);
    struct Class * base;
+   size_t offset;
 };
 
-extern void Object_Init(struct Object * const object, struct Class * const vtbl, 
-      size_t vtbl_size);
+extern void Object_Init(struct Class * const clazz, struct Class * const parent);
 
 extern struct Object * Object_Cast(struct Class const * const cast_class, 
       struct Object * const object);
