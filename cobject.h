@@ -1,54 +1,37 @@
-#ifndef COBJECT_IMPLEMENTATION
-#undef _private 
-#define _private const
-#else
-#undef _private 
-#define _private
-#endif /*COBJECT_IMPLEMENTATION*/
+/*
+ * cobject.h
+ *
+ *  Created on: Sep 27, 2019
+ *      Author: roalanis
+ */
 
 #ifndef COBJECT_H_
 #define COBJECT_H_
 
-#include "xmac.h"
-#include "std_reuse.h"
+#include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C"{
-#endif
-
+typedef void (*Class_Delete_T)(struct Object * const);
 
 struct Object
 {
-   struct Class * vtbl;
+  struct Class * clazz;
 };
 
 struct Class
 {
-   void (* destroy)(struct Object * const);
-   struct Class * base;
-   size_t offset;
+  size_t offset;
+  struct Class * parent;
+  Class_Delete_T destroy;
 };
 
-extern void Object_Init(struct Class * const clazz, struct Class * const parent);
+extern void Class_populate(struct Class * const clazz, size_t const offset,
+			   struct Class * const parent,
+			   Class_Delete_T const destroy);
 
-extern struct Object * Object_Cast(struct Class const * const cast_class, 
-      struct Object * const object);
+extern void Object_populate(struct Object * const object, struct Class * const clazz);
 
-extern void Object_Delete(struct Object * const object);
+extern struct Object * Object_cast(struct Object * const object, struct Class * const target_class);
 
-#ifdef __cplusplus
-}
-#endif
+extern void Object_delete(struct Object * const object);
 
-#define _delete(_obj) Object_Delete(&(_obj)->Object)
-
-#define _cast(_class, _obj) (CAT(_class,_T) *) Object_Cast(&CAT(_class, _Class).Class, &(_obj)->Object)
-
-#define _using(_class, _obj, _method, ...) CAT(_class, _Class)._method(&(_obj)->_class, \
-      __VA__ARGS__)
-
-#define _call(_class, _obj, _method, ...) (_obj)->_class.vtbl->_method(&(_obj)->_class, __VA__ARGS__)
-
-#define _clone(_obj, _proto) if(NULL != _obj->vtbl) return; memcpy(_obj, &_proto, sizeof(_proto))
-
-#endif /*COBJECT_H_*/
+#endif /* COBJECT_H_ */

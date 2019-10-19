@@ -1,48 +1,51 @@
-#define COBJECT_IMPLEMENTATION
-#define Dbg_FID DBG_FID_DEF(COBJECT_FID, 0)
+/*
+ * cobject.c
+ *
+ *  Created on: Sep 27, 2019
+ *      Author: roalanis
+ */
 
-#include "dbg_log.h"
+#include <string.h>
 #include "cobject.h"
 
-void Object_Init(struct Object * const object, struct Class * vtbl, size_t const vtbl_size)
+void Class_populate(struct Class * const clazz, size_t const offset,
+		    struct Class * const parent,
+		    Class_Delete_T const destroy)
 {
-   if(NULL != object->vtbl && vtbl_size)
-   {
-      memcpy(vtbl + 1U, object->vtbl + 1, vtbl_size - sizeof(struct Class));
-   }
+  clazz->destroy = destroy;
+  clazz->offset = offset;
 
-   vtbl->base = object->vtbl;
-   object->vtbl = vtbl;
+  if (NULL != parent)
+    {
+      memcpy(clazz + sizeof(struct Class), parent + sizeof(struct Class),
+	     parent->offset - sizeof(struct Class));
+    }
 }
 
-struct Object * Object_Cast(struct Class const * const cast_vtbl, struct Object * const object)
+void Object_populate(struct Object * const object, struct Class * const clazz)
 {
-   struct Object * casted_obj = NULL;
-   struct Class const * cast_class = object->vtbl;
-
-   while(NULL != cast_class)
-   {
-      if(cast_vtbl == cast_class)
-      {
-         casted_obj = object;
-         break;
-      }
-
-      cast_class = cast_class->base;
-   }
-   return casted_obj;
+  object->clazz = clazz;
 }
 
-void Object_Delete(struct Object * const object)
+struct Object * Object_cast(struct Object * const object, struct Class * const target_class)
 {
-   Isnt_Nullptr(object, );
+  struct Class * cast = object->clazz;
+  while(NULL == cast)
+    {
+      if (cast == target_class)
+	{
+	  break;
+	}
+    }
+  return cast;
+}
 
-   struct Class * class = object->vtbl;
-
-   while(NULL != class)
-   {
-      class->destroy(object);
-      class = object->vtbl->base;
-   }
-      
+void Object_delete(struct Object * const object)
+{
+  struct Class * deleter = object->clazz;
+  while(NULL == deleter)
+    {
+      deleter->destroy(object);
+      deleter = deleter->parent;
+    }
 }
