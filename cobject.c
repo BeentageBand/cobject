@@ -5,8 +5,9 @@
  *      Author: roalanis
  */
 
-#include <string.h>
 #include "cobject.h"
+
+#include <string.h>
 
 void Class_populate(struct Class * const clazz, size_t const offset,
 		    struct Class * const parent,

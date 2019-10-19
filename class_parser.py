@@ -75,7 +75,7 @@ class ClassParser:
 %(class_t)s * Get_%(name)s_Class(void)\n\
 {\n\
   static %(class_t)s clazz;\n\
-  if (NULL != clazz.destroy) return &clazz;\n\
+  if (0 != clazz.Class.offset) return &clazz;\n\
   Class_populate(&clazz.Class, sizeof(clazz),\n\
 		 (Class_Delete_T)%(lower_name)s_delete,\n\
 		 Get_%(isa)s_Class());\n\

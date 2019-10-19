@@ -8,6 +8,8 @@ class CInterfaceGenerator:
         self.fmt['upper'] = data.name.upper()
         self.fmt['lower'] = data.name.lower()
         self.fmt['name'] = data.name
+        isa = data.isa[-2].name.lower()
+        self.fmt['isa'] = 'cobject' if isa in 'object' else isa
     def generate(self):
         fmt = self.fmt
         fmt['class'] = self.class_parser.get_decl()
@@ -16,7 +18,7 @@ class CInterfaceGenerator:
         fmt['methods'] = self.methods_parser.get_decl()
         return '#ifndef %(upper)s_H\n\
 #define %(upper)s_H\n\
-#include "%(lower)s.h"\n\
+#include "%(isa)s.h"\n\
 \n\
 %(class)s\n\n\
 %(class_method)s\n\
