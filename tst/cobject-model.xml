@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <domain>
 <class name="Shape">
-    <member name="name" type_t="char const" is_ref="const"/>
+    <member name="name" type_t="char const * "/>
     <method access="public" return_t="char const *" name="get_name"/>
     <method access="public" qualifier="override" return_t="void" name="print_info"/>
 </class>

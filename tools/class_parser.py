@@ -52,7 +52,7 @@ class ClassParser:
     def get_members_decl(self):
         member_list = ''
         for m in self.data.members:
-            member_list += '%s %s;\n' % (m.type_t, m.name)
+            member_list += '%s _private %s;\n' % (m.type_t, m.name)
         return member_list
     def get_class_method_decl(self):
         fmt = {}
@@ -105,7 +105,7 @@ class FunctionAdapter:
         fmt ['return_t'] = return_t
         fmt ['method'] =  name
         fmt ['param_list'] = self.get_params(params)
-        return '%(return_t)s (* %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % (fmt)
+        return '%(return_t)s (* _private %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % (fmt)
     def get_cbk_impl(self, clazz, return_t, name, params):
         fmt = {}
         fmt ['name'] = clazz.name
@@ -117,17 +117,17 @@ class FunctionAdapter:
         return '\
 %(return_t)s %(name)s_%(method)s(union %(name)s * const %(lower)s%(param_list)s)\n\
 {\n\
-  return %(lower)s->%(method)s(%(lower)s%(param_values)s)\n\
+  return %(lower)s->vtbl->%(method)s(%(lower)s%(param_values)s);\n\
 }\n' % (fmt)
     def get_params(self, params = []):
         param_list = ''
         for p in params:
-            param_list += ',%s %s' % (p.type_t, p.name)
+            param_list += ', %s const %s' % (p.type_t, p.name)
         return param_list
     def get_param_values(self, params = []):
         param_values = ''
         for p in params:
-            param_values += ',%s' % (p.name)
+            param_values += ', %s' % (p.name)
         return param_values
 
 class ConstructorParser:

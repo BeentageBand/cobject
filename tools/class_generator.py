@@ -20,10 +20,23 @@ class CInterfaceGenerator:
 #define %(upper)s_H\n\
 #include "%(isa)s.h"\n\
 \n\
+#ifndef %(upper)s_IMPLEMENTATION\n\
+#define _private const\n\
+#else\n\
+#define _private \n\
+#endif\n\
+\n\
+#ifdef __cplusplus\n\
+extern "C" {\n\
+#endif\n\
+\n\
 %(class)s\n\n\
 %(class_method)s\n\
 %(constructors)s\
 %(methods)s\
+#ifdef __cplusplus\n\
+}\n\
+#endif\n\
 #endif /* %(upper)s_H */' % (fmt)
 
 class CInnerIntGenerator:
@@ -40,6 +53,8 @@ class CInnerIntGenerator:
         fmt['class_method'] = self.class_parser.get_class_method_impl()
         fmt['methods'] = self.methods_parser.get_impl()
         return '#ifndef %(upper)s_INT_H\n\
+#define %(upper)s_IMPLEMENTATION\n\
+\n\
 #include "%(lower)s.h"\n\
 \n\
 static void %(lower)s_override(union %(name)s_Class * const %(lower)s);\n\
