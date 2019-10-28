@@ -3,5 +3,6 @@ out
 .project
 .settings
 .cproject
-.[oa]
+*.[oa]
+unit-test
 
