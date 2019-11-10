@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 
+union Shape;
 union Shape_Class
 {
     

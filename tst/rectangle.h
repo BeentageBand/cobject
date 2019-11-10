@@ -6,34 +6,36 @@
 extern "C" {
 #endif
 
-  union Rectangle_Class
+union Rectangle;
+
+union Rectangle_Class
+{
+  union Shape_Class Shape;
+
+  struct
   {
-    union Shape_Class Shape;
+    struct Class Class;
+    char const * (* _private get_name)(union Rectangle * const rectangle);
+    void (* _private print_info)(union Rectangle * const rectangle);
+    float (* _private get_height)(union Rectangle * const rectangle);
+    float (* _private get_width)(union Rectangle * const rectangle);
 
-    struct
-    {
-      struct Class Class;
-      char const * (* _private get_name)(union Rectangle * const rectangle);
-      void (* _private print_info)(union Rectangle * const rectangle);
-      float (* _private get_height)(union Rectangle * const rectangle);
-      float (* _private get_width)(union Rectangle * const rectangle);
-
-    };
   };
+};
 
-  union Rectangle
+union Rectangle
+{
+  union Rectangle_Class * vtbl;
+  union Shape Shape;
+  struct
   {
-    union Rectangle_Class * vtbl;
-    union Shape Shape;
-    struct
-    {
-      union Object Object;
-      char const *  _private name;
-      float _private height;
-      float _private width;
+    union Object Object;
+    char const *  _private name;
+    float _private height;
+    float _private width;
 
-    };
   };
+};
 
   extern union Rectangle_Class * Get_Rectangle_Class(void);
 

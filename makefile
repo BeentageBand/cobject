@@ -18,6 +18,9 @@ TEST_LDFLAGS=$(shell pkg-Config --libs --static $(TEST_DEPS))
 all : install test
 
 install : $(OUT)/bin $(OUT)/lib $(SUBDIRS:%=%-all)
+	-mkdir -p ../build/{lib,include};
+	-cp -f $(OUT)/lib/*.a ../build/lib/;
+	-cp -rf $(OUT)/include/* ../build/include/;
 
 clean : $(SUBDIRS:%=%-clean) tst-clean
 
