@@ -6,35 +6,32 @@ export LDFLAGS=$(shell pkg-config --libs --static $(DEPS) $(TEST_DEPS))
 export CXXFLAGS=-std=gnu++11 $(shell pkg-config --cflags $(DEPS) $(TEST_DEPS)) 
 export CFLAGS=-std=gnu11 $(shell pkg-config --cflags $(DEPS) $(TEST_DEPS)) 
 export OUT=out
-export SUBDIRS=$(OUT)/include/cobject
+export SUBDIRS=cobject ctemplate
 ifndef test
 test=dummy-test
 endif
 
-INSTALL_LIB=libcobject.lib
-INSTALL_INC=cobject.h xmac.h
-
 TEST_LDFLAGS=$(shell pkg-Config --libs --static $(TEST_DEPS))
 
-.PHONY: all clean install test $(SUBDIRS:%=%-clean)
+.PHONY: all clean install test $(SUBDIRS:%=%-all) $(SUBDIRS:%=%-clean) tst-all tst-clean
 
 all : install test
 
-install : $(OUT)/bin $(OUT)/lib
-	@make all -C src;
+install : $(OUT)/bin $(OUT)/lib $(SUBDIRS:%=%-all)
 
-clean : src-clean tst-clean
+clean : $(SUBDIRS:%=%-clean) tst-clean
 
 clobber : clean
 	-rm -rf $(OUT)
 
-test : 
-	@make all -C tst;
+test : tst-all
 	@$(OUT)/bin/unit-test;
 
-
-$(OUT) $(OUT)/bin $(OUT)/lib $(OUT)/include/cobject : 
+$(OUT) $(OUT)/bin $(OUT)/lib $(SUBDIRS:%=$(OUT)/include/%) : 
 	-mkdir -p $@;
 
-%-clean : %
-	-make clean -C $^;
+$(SUBDIRS:%=%-all) tst-all : 
+	make all -C $(@:%-all=%);
+
+$(SUBDIRS:%=%-clean) tst-clean :
+	make clean -C $(@:%-clean=%);
