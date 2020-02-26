@@ -15,4 +15,9 @@
     <member name="radius" type_t="float"/>
     <method access="public" return_t="float" name="get_radius"/>
 </class>
+<class name="Container">
+	<typename name="T"/>
+	<member name="shape" type_t="T"/>
+	<method access="public" return_t="T" name ="get_shape"/>
+</class>
 </domain>

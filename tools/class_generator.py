@@ -20,12 +20,6 @@ class CInterfaceGenerator:
 #define %(upper)s_H\n\
 #include "%(isa)s.h"\n\
 \n\
-#ifndef %(upper)s_IMPLEMENTATION\n\
-#define _private const\n\
-#else\n\
-#define _private \n\
-#endif\n\
-\n\
 #ifdef __cplusplus\n\
 extern "C" {\n\
 #endif\n\

@@ -17,8 +17,7 @@ static  union Circle Circle = {NULL};
 static char const * Rectangle_Name = "rectangle";
 static union Rectangle Rectangle = {NULL};
 
-TEST(ShapeClass, override)
-{
+TEST(ShapeClass, override) {
   union Shape_Class * clazz = Get_Shape_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
@@ -29,8 +28,7 @@ TEST(ShapeClass, override)
   ASSERT_TRUE(NULL != clazz->print_info);
 }
 
-TEST(CircleClass, override)
-{
+TEST(CircleClass, override) {
   union Circle_Class * clazz = Get_Circle_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
@@ -42,8 +40,7 @@ TEST(CircleClass, override)
   ASSERT_TRUE(NULL != clazz->get_radius);
 }
 
-TEST(RectangleClass, override)
-{
+TEST(RectangleClass, override) {
   union Rectangle_Class * clazz = Get_Rectangle_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
@@ -56,8 +53,7 @@ TEST(RectangleClass, override)
   ASSERT_TRUE(NULL != clazz->get_width);
 }
 
-TEST(Constructor, Circle)
-{
+TEST(Constructor, Circle) {
 
   float r = 0.1;
   Circle_populate(&Circle, Circle_Name, r);
@@ -70,8 +66,7 @@ TEST(Constructor, Circle)
   Circle_print_info(&Circle);
 }
 
-TEST(Constructor, Rectangle)
-{
+TEST(Constructor, Rectangle) {
   float h = 0.1;
   float w = 0.1;
 
@@ -84,8 +79,7 @@ TEST(Constructor, Rectangle)
   Rectangle_print_info(&Rectangle);
 }
 
-TEST(Interface, Shape)
-{
+TEST(Interface, Shape) {
   union Shape * shape[] = {&Circle.Shape, &Rectangle.Shape};
 
   printf("shape 0\n");
@@ -96,5 +90,3 @@ TEST(Interface, Shape)
   Shape_print_info(shape[1]);
   ASSERT_EQ(Rectangle_Name, Shape_get_name(shape[1]));
 }
-
-

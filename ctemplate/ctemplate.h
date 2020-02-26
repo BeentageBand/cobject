@@ -1,6 +1,7 @@
 #ifndef CTEMPLATE_H_
 #define CTEMPLATE_H_
 
+#include "xmac.h"
 #include "cobject.h"
 
 #define TEMPLATE(...) EVAL4(WHILE(CHECK, TEMPLATE_CAT, __VA_ARGS__, dummy))

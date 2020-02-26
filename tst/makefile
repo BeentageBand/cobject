@@ -1,5 +1,5 @@
-CSRCS=$(wildcard *.c)
-CCSRCS=$(wildcard *.cc)
+CSRCS=$(filter-out container.c ,$(wildcard *.c))
+CCSRCS=$(filter-out , $(wildcard *.cc))
 TEST=unit-test
 
 .PHONY : all clean 

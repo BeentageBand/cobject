@@ -15,6 +15,7 @@ class ClassParser:
         fmt['methods'] = self.get_methods_decl()
 
         return '\
+%(union)s;\n\
 %(class_t)s\n\
 {\n\
     %(isa_class_list)s\n\
