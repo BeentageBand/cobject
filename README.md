@@ -10,7 +10,59 @@ The cobject library supports the following OOP features:
 struct Object is a struct type which acts as a object (class instance).
 
 ## struct Class
-struct Class is a struct type which acts as a class 
+struct Class is a struct type which acts as a class.
+
+## Create a new Object
+Given e.g. union Shape class, an object can be destroyed as:
+
+static allocation:
+
+```
+union Shape shape_object = {NULL};  
+Populate_Shape(&shape_object);
+```
+
+dynamic allocation:
+
+```
+union Shape * const shape_object = _new(Shape);
+Populate_Shape(shape_object);
+```
+
+## Destroy an Object
+Given e.g. union Shape class, an object can be instantiated as:
+
+static allocation:
+
+```
+union Shape shape_object = {NULL};  
+Populate_Shape(&shape_object);
+...
+_delete(&shape_object);
+```
+
+dynamic allocation:
+
+```
+union Shape * const shape_object = _new(Shape); /* It's just malloc(sizeof(union Shape) */
+Populate_Shape(shape_object);
+...
+_delete(shape_object);
+free (shape_object); /* Sorry, you need to free the memory by yourself : ( */
+```
+
+## Call a method
+
+```
+static char * shape_name = "MyShape";
+Shape_set_name(shape_object, shape_name);
+```
+Call
+```
+union Shape * shape = _new(Circle);
+static char * shape_name = "MyCircle";
+Shape_set_name(shape_object, shape_name);
+```
 
 ## Use cobject_model.py
 cobject_mode.py generates the following files:
