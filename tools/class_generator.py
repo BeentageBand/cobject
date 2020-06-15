@@ -1,15 +1,15 @@
-from class_parser import *
+from .class_parser import ClassParser, ConstructorParser, MethodParser
+
+
 class CInterfaceGenerator:
     def __init__(self, data):
         self.class_parser = ClassParser(data)
         self.constructor_parser = ConstructorParser(data)
         self.methods_parser = MethodParser(data)
-        self.fmt = {}
-        self.fmt['upper'] = data.name.upper()
-        self.fmt['lower'] = data.name.lower()
-        self.fmt['name'] = data.name
+        self.fmt = {'upper': data.name.upper(), 'lower': data.name.lower(), 'name': data.name}
         isa = data.isa[-2].name.lower()
         self.fmt['isa'] = 'cobject' if isa in 'object' else isa
+
     def generate(self):
         fmt = self.fmt
         fmt['class'] = self.class_parser.get_decl()
@@ -31,17 +31,16 @@ extern "C" {\n\
 #ifdef __cplusplus\n\
 }\n\
 #endif\n\
-#endif /* %(upper)s_H */' % (fmt)
+#endif /* %(upper)s_H */' % fmt
+
 
 class CInnerIntGenerator:
     def __init__(self, data):
         self.class_parser = ClassParser(data)
         self.constructor_parser = ConstructorParser(data)
         self.methods_parser = MethodParser(data)
-        self.fmt = {}
-        self.fmt['upper'] = data.name.upper()
-        self.fmt['lower'] = data.name.lower()
-        self.fmt['name'] = data.name
+        self.fmt = {'upper': data.name.upper(), 'lower': data.name.lower(), 'name': data.name}
+
     def generate(self):
         fmt = self.fmt
         fmt['class_method'] = self.class_parser.get_class_method_impl()
@@ -56,4 +55,4 @@ static void %(lower)s_delete(union %(name)s * const %(lower)s);\n\
 \n\
 %(class_method)s\n\
 %(methods)s\n\
-#endif /* %(upper)s_INT_H */\n' % (fmt)
+#endif /* %(upper)s_INT_H */\n' % fmt
