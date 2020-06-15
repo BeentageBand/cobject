@@ -14,5 +14,5 @@ clean :
 ../$(OUT)/include/ctemplate/%.h : %.h
 	cp -sf $(realpath $^) $@;
 
-../$(OUT)/include/ctemplate: 
+../$(OUT)/include/ctemplate/ : 
 	-mkdir -p $@;

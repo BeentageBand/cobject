@@ -90,3 +90,9 @@ TEST(Interface, Shape) {
   Shape_print_info(shape[1]);
   ASSERT_EQ(Rectangle_Name, Shape_get_name(shape[1]));
 }
+
+TEST(Shape, equals) 
+{
+  ASSERT_NE(0, _compare(&Circle, &Rectangle));
+  ASSERT_EQ(0, _compare(&Rectangle, &Rectangle));
+}

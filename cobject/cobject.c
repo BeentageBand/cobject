@@ -8,21 +8,21 @@
 #include "cobject.h"
 #include <string.h>
 
+static int object_compare(union Object const * const object, union Object const * const other);
+static void object_copy(union Object * const object, union Object const * const source);
 static void object_delete(union Object * const object);
-static int object_compare(union Object * const object, union Object * const other);
-static void object_copy(union Object * const object, union Object * const source);
+
+int object_compare(union Object const * const object, union Object const * const other)
+{
+  return memcmp(object, other, object->clazz->offset);
+}
+
+void object_copy(union Object * const object, union Object const * const source)
+{
+  memcpy(object, source, object->clazz->offset);
+}
 
 void object_delete(union Object * const object) {}
-
-int object_compare(union Object * const object, union Object * const other)
-{
-    return memcmp(object, other, object->clazz->offset);
-}
-
-void object_copy(union Object * const object, union Object * const source)
-{
-    memcpy(object, source, object->clazz->offset);
-}
 
 void Class_populate(struct Class * const clazz, size_t const offset, struct Class * const parent)
 {
@@ -32,7 +32,6 @@ void Class_populate(struct Class * const clazz, size_t const offset, struct Clas
   }
   clazz->destroy = object_delete;
   clazz->compare = object_compare;
-  clazz->copy = object_copy;
   clazz->offset = offset;
 }
 
@@ -56,43 +55,38 @@ union Object * Object_cast(union Object * const object, struct Class * const tar
 
 void Object_delete(union Object * const object)
 {
-    struct Class * deleter = object->clazz;
-    while(NULL == deleter)
-    {
-        if (NULL != deleter->destroy)
-        {
-            deleter->destroy(object);
-        }
-      deleter = deleter->parent;
-    }
+  struct Class * deleter = object->clazz;
+  while(NULL == deleter)
+  {
+    deleter->destroy(object);
+    deleter = deleter->parent;
+  }
 }
 
-
-int Object_compare(union Object * const object, union Object * const other)
+int Object_compare(union Object const * const object, union Object const * const other)
 {
-    struct Class * comparator = object->clazz;
-    while(NULL == comparator)
-    {
-      if (NULL != comparator->compare)
-      {
-          return comparator->compare(object, other);
-      }
-      comparator = comparator->parent;
-    }
-    return -1;
+  if (object == other) return 0;
+  if (object->clazz != other->clazz) return -1;
+  
+  struct Class * comparator = object->clazz;
+  while (NULL == comparator) 
+  {
+    comparator->compare(object, other);
+    comparator = comparator->parent;
+  }
+
 }
 
-void Object_copy(union Object * const object, union Object * const source)
+
+void Object_copy(union Object * const object, union Object const * const source)
 {
-    struct Class * copier = object->clazz;
-    while(NULL == copier)
-    {
-      if (NULL != copier->copy)
-      {
-          copier->copy(object, source);
-          return;
-      }
-      copier = copier->parent;
-    }
+  if (object == source) return;
+  if (object->clazz != source->clazz) return;
+  
+  struct Class * copier = object->clazz;
+  while (NULL == copier) 
+  {
+    copier->compare(object, source);
+    copier = copier->parent;
+  }
 }
-

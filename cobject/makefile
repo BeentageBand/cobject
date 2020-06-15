@@ -11,7 +11,7 @@ install: ../$(OUT)/include/cobject/ $(LIBS:%=../$(OUT)/lib/%) $(INCS:%=../$(OUT)
 
 clean : 
 	@echo "clean all-tst"
-	rm -rf *.o *.lib
+	rm -rf *.o lib*.a
 
 $(LIBS) : $(SRCS:.c=.o)
 	@echo "compiling $(LIBS)";
@@ -23,7 +23,7 @@ $(LIBS:%=../$(OUT)/lib/%): $(LIBS)
 ../$(OUT)/include/cobject/%.h : %.h
 	cp -f $(realpath $^) $@;
 
-../$(OUT)/include/cobject : 
+../$(OUT)/include/cobject/ : 
 	-mkdir -p $@;
 
 %.o : %.c

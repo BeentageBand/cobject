@@ -4,7 +4,7 @@
 
 #ifdef RECTANGLE_IMPLEMENTATION 
 #define _private
-#else RECTANGLE_IMPLEMENTATION 
+#else
 #define _private const
 #endif 
 
@@ -57,4 +57,5 @@ extern float Rectangle_get_width(union Rectangle * const rectangle);
 #ifdef __cplusplus
 }
 #endif
+#undef _private
 #endif /* RECTANGLE_H */

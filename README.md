@@ -12,21 +12,21 @@ struct Object is a struct type which acts as a object (class instance).
 ## struct Class
 struct Class is a struct type which acts as a class.
 
-## Create a new Object
+## Create a New Object
 Given e.g. union Shape class, an object can be destroyed as:
 
 static allocation:
 
 ```
 union Shape shape_object = {NULL};  
-Populate_Shape(&shape_object);
+Shape_populate(&shape_object);
 ```
 
 dynamic allocation:
 
 ```
-union Shape * const shape_object = _new(Shape);
-Populate_Shape(shape_object);
+union Shape * const shape_object = _new(union Shape);
+Shape_populate(shape_object);
 ```
 
 ## Destroy an Object
@@ -36,37 +36,52 @@ static allocation:
 
 ```
 union Shape shape_object = {NULL};  
-Populate_Shape(&shape_object);
+Shape_populate(&shape_object);
 ...
 _delete(&shape_object);
 ```
 
 dynamic allocation:
 
-```
-union Shape * const shape_object = _new(Shape); /* It's just malloc(sizeof(union Shape) */
-Populate_Shape(shape_object);
+```c
+union Shape * const shape_object = _new(union Shape); /* It's just malloc(sizeof(union Shape) */
+Shape_populate(shape_object);
 ...
 _delete(shape_object);
 free (shape_object); /* Sorry, you need to free the memory by yourself : ( */
 ```
 
-## Call a method
+## Call a Method
 
 ```
 static char * shape_name = "MyShape";
 Shape_set_name(shape_object, shape_name);
 ```
-Call
+
+## Call an Interface
 ```
-union Shape * shape = _new(Circle);
+union Shape * shape = _new(union Circle);
 static char * shape_name = "MyCircle";
 Shape_set_name(shape_object, shape_name);
 ```
 
-## Use cobject_model.py
-cobject_mode.py generates the following files:
+## Down Cast
+
+```
+union circle circle = {null};
+Circle_populate(&circle, 1.0);
+Shape_set_name(&circle.Shape, "Circle");
+```
+
+## Up Cast
+
+```
+union Shape * shape = _new(union Circle);
+Circle_get_area(_cast(shape, Circle));
+```
+
+## Use python -m tools
+tools module will generates the following files:
 - <object>.h : api header with methods and object structure. This header can be used by other clients
-- <object>-impl.h : implementation header for other -cobjects. This header can be used by other clients if inheritance is needed.
-- <object>-impl.c : source implementation for object. 
+- <object>-internal.h : implementation header for other -cobjects. This header can be used by other clients if inheritance is needed.
 - <object>.c : template source so client can implement object methods.

@@ -10,19 +10,23 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 union Object;
 
+typedef int (*Class_Compare_T)(union Object const * const, union Object const * const);
+typedef void (*Class_Copy_T)(union Object * const, union Object const * const);
 typedef void (*Class_Delete_T)(union Object * const);
-typedef int (*Class_Compare_T)(union Object * const, union Object * const);
-typedef void (*Class_Copy_T)(union Object * const, union Object * const);
 
 struct Class
 {
-    size_t offset;
-    struct Class * parent;
-    Class_Delete_T destroy;
-    Class_Compare_T compare;
-    Class_Copy_T copy;
+  size_t offset;
+  struct Class * parent;
+  Class_Delete_T destroy;
+  Class_Compare_T compare;
+  Class_Copy_T copy;
 };
 
 union Object
@@ -38,17 +42,20 @@ extern union Object * Object_cast(union Object * const object, struct Class * co
 
 extern void Object_delete(union Object * const object);
 
-extern int Object_compare(union Object * const object, union Object * const other);
+extern int Object_compare(union Object const * const object, union Object const * const other);
 
-extern void Object_copy(union Object * const object, union Object * const source);
+extern void Object_copy(union Object * const object, union Object const * const source);
 
-#define _cast(obj, clazz) (union Clazz *) Object_cast(&obj.Object, Get_##clazz##_Class())
-#define _static_cast(obj, clazz) obj.clazz
+#ifdef __cplusplus
+}
+#endif
+
+#define _cast(obj, clazz) (union Clazz *) Object_cast(&(obj)->.Object, &Get_##clazz##_Class()->Class)
 #define _using(clazz, method, ...) Get_##clazz##_Class()->method(__VA_ARGS__)
-#define _delete(obj) Object_delete(&obj.Object)
+#define _delete(obj) Object_delete(&(obj)->Object)
 #define _new(clazz) (clazz *) malloc(sizeof(clazz))
-#define _compare(lvalue, rvalue) Object_compare(&lvalue.Object, &rvalue.Object)
-#define _copy(obj, source) Object_copy(&obj.Object, &source.Object)
-#define _is_null(ref, default_val) if (NULL == ref) return default_val
+#define _equals(lval, rval) (0 == Object_compare(&(lval)->Object, &(rval)->Object))
+#define _compare(lval, rval) Object_compare(&(lval)->Object, &(rval)->Object)
+#define _copy(lval, rval) Object_copy(&(lval)->Object, &(rval)->Object)
 
 #endif /* COBJECT_H_ */

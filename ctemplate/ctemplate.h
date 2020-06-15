@@ -2,7 +2,6 @@
 #define CTEMPLATE_H_
 
 #include "xmac.h"
-#include "cobject.h"
 
 #define TEMPLATE(...) EVAL4(WHILE(CHECK, TEMPLATE_CAT, __VA_ARGS__, dummy))
 #define TEMPLATE_CAT(a, ...) CAT(a, IF( CHECK(__VA_ARGS__) )(CAT(_, __VA_ARGS__), ) )

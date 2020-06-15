@@ -1,5 +1,4 @@
-#define COBJECT_IMPLEMENTATION
-
+#define CONTAINER_T_IMPLEMENTATION
 #include "container-circle.h"
 
 #define Container_Params Circle 

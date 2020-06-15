@@ -47,4 +47,5 @@ extern void Shape_print_info(union Shape * const shape);
 #ifdef __cplusplus
 }
 #endif
+#undef _private
 #endif /* SHAPE_H */

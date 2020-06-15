@@ -53,4 +53,5 @@ extern float Circle_get_radius(union Circle * const circle);
 #ifdef __cplusplus
 }
 #endif
+#undef _private
 #endif /* CIRCLE_H */

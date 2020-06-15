@@ -15,7 +15,7 @@ clean :
 	-cp -sf $(realpath $^) $@;
 
 $(TEST) : $(CSRCS:.c=.o) $(CCSRCS:.cc=.o)
-	$(CPP) $(CXXFLAGS) $(SUBDIRS:%=-I ../%) $(LDFLAGS) -L ../$(OUT)/lib -lcobject -o $@ $^;
+	$(CPP) $(CXXFLAGS) $(SUBDIRS:%=-I ../%) -o $@ $^ $(LDFLAGS) -L../$(OUT)/lib -lcobject;
 
 %.o : %.cc
 	$(CPP) $(CXXFLAGS) $(SUBDIRS:%= -I ../%) -o $@ -c $^;

@@ -10,9 +10,9 @@ def write_files_by_generators(output_path, class_data, generators=[], filenames=
     for i in range(len(generators)):
         generator = generators[i](class_data)
         file_path = os.path.join(output_path, filenames[i])
-        with file(file_path, 'w') as f:
+        with open(file_path, 'w') as f:
             try:
-                print 'Writing ' + filenames[i]
+                print('Writing ', file_path)
                 f.write(generator.generate())
             finally:
                 f.close()

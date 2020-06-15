@@ -68,7 +68,22 @@ class CTemplateGenerator(CInterfaceGenerator):
         self.template_parser = TemplateParser(data)
 
     def generate(self):
+        fmt = self.fmt
+        fmt['template_def'] = self.template_parser.get_template_def()
+        fmt['template_undef'] = self.template_parser.get_template_undef()
+        fmt['typenames_def'] = self.template_parser.get_typenames_def()
+        fmt['typenames_undef'] = self.template_parser.get_typenames_undef()
+        fmt['constructor_def'] = self.template_parser.get_constructor_def()
+        fmt['constructor_undef'] = self.template_parser.get_constructor_undef()
         return '#if !defined(%(upper)s_H) || defined(%(name)s_Params)\n\
-#include "%(lower)s.h"\n\n\
 #ifndef %(name)s_Params\n#error "%(name)s_Params is not defined"\n#endif\n\n\
+%(template_def)s\n\
+%(typenames_def)s\n\
+%(constructor_defs)s\n\
+%(methods_defs)s\n\
+#include "%(lower)s.h"\n\n\
+%(template_undef)s\n\
+%(typenames_undef)s\n\
+%(constructor_undefs)s\n\
+%(methods_undefs)s\n\
 #endif /* %(upper)s_H */' % self.fmt

@@ -1,4 +1,5 @@
 #ifndef CONTAINER_CIRCLE_H_
+#define CONTAINER_CIRCLE_H_
 
 #include "circle.h"
 typedef union Circle Circle_T;

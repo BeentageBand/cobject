@@ -41,7 +41,7 @@ class ClassParser(object):
 
     def get_cast_decl(self, suffix):
         isa_list = ''
-        print len(self.data.isa)
+        print(len(self.data.isa))
         if len(self.data.isa) <= 2:
             return isa_list
         for i in self.data.isa[1:-1]:
@@ -86,16 +86,30 @@ class ClassParser(object):
             method_list += adapter.get_cbk_impl(self.data, m.return_t, m.name, m.params)
         return method_list
 
-    def get_guard(self):
-        fmt['upper'] = self.data.name.upper()
-        return '#ifndef %(upper)s_H\n#define %(upper)s_H' % fmt
+    def get_guard(self, suffix=None):
+        if suffix is not None:
+            suffix = '_' + suffix
+        fmt = {'upper': self.data.name.upper(), 'suffix': suffix}
+        return '#ifndef %(upper)s_H\n#define %(upper)s%(suffix)s_H' % fmt
 
-    def get_guard_end(self):
-        return '#endif /*%(upper)s_H*/'
+    def get_guard_end(self, suffix=None):
+        if suffix is not None:
+            suffix = '_' + suffix
+        fmt = {'upper': self.data.name.upper(), 'suffix': suffix}
+        return '#endif /*%(upper)s_H*/' % fmt
 
 
 class TemplateParser(ClassParser):
-    pass
+    def __init__(self, data):
+        super(ClassParser, self).__init__(self, data)
+
+    def get_template_def(self):
+        return ''
+    def get_template_undef(self):
+    def get_typenames_def(self):
+    def get_typenames_undef(self):
+    def get_constructor_def(self):
+    def get_constructor_undef(self):
 
 
 class FunctionAdapter:
@@ -117,6 +131,9 @@ class FunctionAdapter:
 {\n\
   return %(lower)s->vtbl->%(method)s(%(lower)s%(param_values)s);\n\
 }\n' % fmt
+
+    def get_define(self, clazz , name):
+        return '#define %(name)s_%(method)s TEMPLATE(%(name)s_ \n\n'
 
     @staticmethod
     def get_params(params=None):
@@ -170,3 +187,8 @@ class MethodParser:
             method = self.function_adapter.get_cbk_impl(self.data, m.return_t, m.name, m.params)
             method_list += '%s\n' % method
         return method_list
+
+    def get_define(self):
+        method_list = ''
+        for m in self.data.methods:
+            method = self.function_adapter.get_define(self.data, m.name)
