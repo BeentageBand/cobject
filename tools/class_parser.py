@@ -1,4 +1,4 @@
-class ClassParser:
+class ClassParser(object):
     def __init__(self, data):
         self.data = data
 
@@ -7,7 +7,7 @@ class ClassParser:
                'isa_t': '%s %s %s;\n' % (self.data.isa[-2].type_t, self.data.isa[-2].name, self.data.isa[-2].name),
                'isa_list': self.get_cast_decl(''), 'isa_class_t': '%s %s_Class %s;\n' % (
                 self.data.isa[-2].type_t, self.data.isa[-2].name, self.data.isa[-2].name),
-               'isa_class_list': self.get_cast_decl('Class'), 'members': self.get_members_decl(),
+               'isa_class_list': self.get_cast_decl('_Class'), 'members': self.get_members_decl(),
                'methods': self.get_methods_decl()}
 
         return '\
@@ -37,16 +37,15 @@ class ClassParser:
 
     def get_class_t(self):
         fmt = {'type_t': self.data.isa[-1].type_t, 'name': self.data.name}
-        return '%(type_t)s %(name)s_Class' % (fmt)
+        return '%(type_t)s %(name)s_Class' % fmt
 
     def get_cast_decl(self, suffix):
         isa_list = ''
-        print
-        len(self.data.isa)
+        print len(self.data.isa)
         if len(self.data.isa) <= 2:
             return isa_list
         for i in self.data.isa[1:-1]:
-            isa_list = '%s %s_%s %s;\n' % (i.type_t, i.name, suffix, i.name)
+            isa_list = '%s %s%s %s;\n' % (i.type_t, i.name, suffix, i.name)
         return isa_list
 
     def get_members_decl(self):
@@ -68,15 +67,14 @@ class ClassParser:
 
     def get_class_method_impl(self):
         fmt = {'name': self.data.name, 'class_t': self.get_class_t(), 'lower_name': self.data.name.lower(),
-               'isa': self.data.isa[-1].name}
+               'isa': 'NULL' if self.data.isa[-2].name is 'Object' else '&Get_%s_Class()->Class' % self.data.isa[
+                   -2].name}
         return '\
 %(class_t)s * Get_%(name)s_Class(void)\n\
 {\n\
   static %(class_t)s clazz;\n\
   if (0 != clazz.Class.offset) return &clazz;\n\
-  Class_populate(&clazz.Class, sizeof(clazz),\n\
-		 (Class_Delete_T)%(lower_name)s_delete,\n\
-		 Get_%(isa)s_Class());\n\
+  Class_populate(&clazz.Class, sizeof(clazz), %(isa)s);\n\
   %(lower_name)s_override(&clazz);\n\
   return &clazz;\n\
 }' % fmt
@@ -87,6 +85,17 @@ class ClassParser:
         for m in self.data.methods:
             method_list += adapter.get_cbk_impl(self.data, m.return_t, m.name, m.params)
         return method_list
+
+    def get_guard(self):
+        fmt['upper'] = self.data.name.upper()
+        return '#ifndef %(upper)s_H\n#define %(upper)s_H' % fmt
+
+    def get_guard_end(self):
+        return '#endif /*%(upper)s_H*/'
+
+
+class TemplateParser(ClassParser):
+    pass
 
 
 class FunctionAdapter:
@@ -124,7 +133,7 @@ class FunctionAdapter:
             params = []
         param_values = ''
         for p in params:
-            param_values += ', %s' % (p.name)
+            param_values += ', %s' % p.name
         return param_values
 
 

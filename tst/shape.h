@@ -2,6 +2,12 @@
 #define SHAPE_H
 #include "cobject.h"
 
+#ifdef SHAPE_IMPLEMENTATION 
+#define _private
+#else
+#define _private const
+#endif 
+
 #ifdef __cplusplus
 extern "C" {
 #endif

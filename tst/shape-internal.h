@@ -1,18 +1,17 @@
 #ifndef SHAPE_INT_H
-#define COBJECT_IMPLEMENTATION
+#define SHAPE_INT_H
+
+#define SHAPE_IMPLEMENTATION
 
 #include "shape.h"
 
 static void shape_override(union Shape_Class * const shape);
-static void shape_delete(union Shape * const shape);
 
 union Shape_Class * Get_Shape_Class(void)
 {
   static union Shape_Class clazz;
-  if (NULL != clazz.Class.destroy) return &clazz;
-  Class_populate(&clazz.Class, sizeof(clazz),
-		 NULL,
-		 (Class_Delete_T)shape_delete);
+  if (0 != clazz.Class.offset) return &clazz;
+  Class_populate(&clazz.Class, sizeof(clazz), NULL);
   shape_override(&clazz);
   return &clazz;
 }

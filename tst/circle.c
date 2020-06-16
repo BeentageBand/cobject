@@ -7,8 +7,6 @@ void circle_override(union Circle_Class * const circle)
     circle->get_radius = circle_get_radius;
 }
 
-void circle_delete(union Circle * const circle) {}
-
 float circle_get_radius(union Circle * const circle)
 {
     return circle->radius;

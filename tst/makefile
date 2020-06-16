@@ -9,7 +9,7 @@ all : ../$(OUT)/bin/$(TEST)
 
 clean : 
 	@echo "clean all-tst";
-	rm -rf $(CSRCS:.c=.o) $(CCSRCS:.cc=.o)
+	rm -rf $(CSRCS:.c=.o) $(CCSRCS:.cc=.o) $(TEST)
 
 ../$(OUT)/bin/$(TEST) : $(TEST)
 	-cp -sf $(realpath $^) $@;

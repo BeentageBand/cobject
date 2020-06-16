@@ -11,8 +11,6 @@ void shape_override(union Shape_Class * const shape)
     shape->get_name = shape_get_name;
 }
 
-void shape_delete(union Shape * const shape) {}
-
 void shape_print_info(union Shape * const shape)
 {
     printf("Shape name: %s\n", shape->name);

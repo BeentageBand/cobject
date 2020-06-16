@@ -17,10 +17,6 @@ void Rectangle_populate(union Rectangle * const rectangle, char const *  const n
   rectangle->width = width;
 }
 
-void rectangle_delete(union Rectangle * const rectangle)
-{
-}
-
 void rectangle_override(union Rectangle_Class * const rectangle)
 {
   rectangle->get_height = rectangle_get_height;

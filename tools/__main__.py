@@ -1,8 +1,22 @@
+import sys, os
 from optparse import OptionParser
 from xml.etree import ElementTree, ElementInclude
 
 from .class_data import DomainData
-from .class_generator import CInnerIntGenerator, CInterfaceGenerator
+from .class_generator import CInnerIntGenerator, CInterfaceGenerator, CTemplateGenerator
+
+
+def write_files_by_generators(output_path, class_data, generators=[], filenames=[]):
+    for i in range(len(generators)):
+        generator = generators[i](class_data)
+        file_path = os.path.join(output_path, filenames[i])
+        with file(file_path, 'w') as f:
+            try:
+                print 'Writing ' + filenames[i]
+                f.write(generator.generate())
+            finally:
+                f.close()
+
 
 usage = 'Usage: tools [options]'
 parser = OptionParser(usage=usage)
@@ -13,10 +27,13 @@ parser.add_option('-i', '--input', dest='input', help='xml with domain')
 (options, args) = parser.parse_args()
 
 if None is options.input:
+    parser.print_help()
     parser.error('--input is mandatory')
 if None is options.output:
+    parser.print_help()
     parser.error('--output is mandatory')
 if None is options.classname:
+    parser.print_help()
     parser.error('--class is mandatory')
 
 tree = ElementTree.parse(options.input)
@@ -25,29 +42,14 @@ ElementInclude.include(root)
 domain_data = DomainData(root)
 class_data = domain_data.get_class(options.classname)
 
-c_interface = CInterfaceGenerator(class_data)
-c_inner_int = CInnerIntGenerator(class_data)
-'''
-c_inner_impl = CInnerImplGenerator(class_data)
-c_implementation = CImplementationGenerator(class_data)
-'''
+file_generators = [CInnerIntGenerator, CInterfaceGenerator]
+file_names = [class_data.name.lower() + '-internal.h', class_data.name.lower() + '.h']
 
-interface_filename = options.output + '/' + options.classname.lower() + '.h'
-inner_filename = options.output + '/' + options.classname.lower() + '-internal.h'
+if hasattr(class_data, 'typenames'):
+    file_generators.append(CTemplateGenerator)
+    file_names.append(class_data.name.lower() + '-template.h')
 
-interface_file = open(interface_filename, 'w')
-inner_file = open(inner_filename, 'w')
-
-try:
-    print
-    'Writing ' + interface_filename
-    interface_file.write(c_interface.generate())
-    print
-    'Writing ' + inner_filename
-    inner_file.write(c_inner_int.generate())
-finally:
-    interface_file.close()
-    inner_file.close()
+write_files_by_generators(options.output, class_data, file_generators, file_names)
 
 print
 'End Processing'

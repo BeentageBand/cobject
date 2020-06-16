@@ -23,14 +23,15 @@ class MethodData:
         return params
 
 
-class ClassData:
-    def __init__(self, root=None, isa=[]):
+class ClassData(object):
+    def __init__(self, root=None, isa=None):
+        if isa is None:
+            isa = []
         if None is root:
             self.type_t = 'struct'
             self.name = 'Object'
             self.isa = isa
-            print
-            'ClassData - ', self.name
+            print 'ClassData - ', self.name
             self.constructors = []
             self.members = []
             self.methods = []
@@ -40,8 +41,7 @@ class ClassData:
             self.isa = isa
             self.members = []
             self.methods = []
-            print
-            'ClassData - ', self.name
+            print 'ClassData - ', self.name
             self.constructors = self.get_constructors(root)
             for i in isa:
                 self.members.extend(i.members)
@@ -74,6 +74,27 @@ class ClassData:
         return methods
 
 
+class TemplateData(ClassData):
+    def __init__(self, root=None, isa=None):
+        print 'ping - template data'
+        super(TemplateData, self).__init__(root, isa)
+        self.typenames = self.get_typenames(root)
+        for i in self.isa:
+            if hasattr(i, 'typenames'):
+                self.typenames.extend(i.typenames)
+
+        self.prefix = self.name
+        for t in self.typenames:
+            self.name = self.name + '_' + t
+
+    @staticmethod
+    def get_typenames(root):
+        typenames = []
+        for t in root.findall('typename'):
+            typenames.append(t.get('name'))
+        return typenames
+
+
 class DomainData:
     def __init__(self, root):
         self.root = root
@@ -84,26 +105,22 @@ class DomainData:
         while True:
             class_root = self.find_class(target)
             if None is class_root:
-                print
-                class_root
+                print class_root
                 break
-            print
-            ElementTree.tostring(class_root)
+            print ElementTree.tostring(class_root)
             class_roots.append(class_root)
             target = class_root.get('isa')
         class_roots.reverse()
         class_data = [ClassData()]
         for c in class_roots:
-            print
-            'ClassData elems: ', len(class_data)
-            clazz = ClassData(c, class_data)
+            print 'ClassData elems: ', len(class_data), c.get('template')
+            clazz = TemplateData(c, class_data) if 'true' == c.get('template') else ClassData(c, class_data)
             class_data.append(clazz)
         return clazz
 
     def find_class(self, target_class):
         if None is target_class:
             return None
-        print
-        'find - ', target_class
-        query = "./class[@name='%s']" % (target_class)
+        print 'find - ', target_class
+        query = "./class[@name='%s']" % target_class
         return self.root.find(query)
