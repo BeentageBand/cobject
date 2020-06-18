@@ -19,7 +19,6 @@ class CInterfaceGenerator(object):
         fmt['guard'] = self.class_parser.get_guard()
         fmt['guard_end'] = self.class_parser.get_guard_end()
         return '%(guard)s\n\
-#define %(upper)s_H\n\
 #include "%(isa)s.h"\n\n\
 #ifdef %(upper)s_IMPLEMENTATION \n\
 #define _private\n\
@@ -66,6 +65,7 @@ class CTemplateGenerator(CInterfaceGenerator):
     def __init__(self, data):
         super(CTemplateGenerator, self).__init__(data)
         self.template_parser = TemplateParser(data)
+        self.fmt['lower_prefix'] = data.prefix.lower()
 
     def generate(self):
         fmt = self.fmt
@@ -77,13 +77,12 @@ class CTemplateGenerator(CInterfaceGenerator):
         fmt['constructor_undef'] = self.template_parser.get_constructor_undef()
         return '#if !defined(%(upper)s_H) || defined(%(name)s_Params)\n\
 #ifndef %(name)s_Params\n#error "%(name)s_Params is not defined"\n#endif\n\n\
+#include "ctemplate/ctemplate.h"\n\n\
 %(template_def)s\n\
 %(typenames_def)s\n\
-%(constructor_defs)s\n\
-%(methods_defs)s\n\
-#include "%(lower)s.h"\n\n\
+%(constructor_def)s\n\
+#include "%(lower_prefix)s.h"\n\n\
 %(template_undef)s\n\
 %(typenames_undef)s\n\
-%(constructor_undefs)s\n\
-%(methods_undefs)s\n\
-#endif /* %(upper)s_H */' % self.fmt
+%(constructor_undef)s\n\
+#endif /* %(upper)s_H */' % fmt

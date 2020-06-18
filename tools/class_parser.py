@@ -89,7 +89,7 @@ class ClassParser(object):
     def get_guard(self, suffix=None):
         if suffix is not None:
             suffix = '_' + suffix
-        fmt = {'upper': self.data.name.upper(), 'suffix': suffix}
+        fmt = {'upper': self.data.name.upper(), 'suffix': '' if suffix is None else suffix}
         return '#ifndef %(upper)s_H\n#define %(upper)s%(suffix)s_H' % fmt
 
     def get_guard_end(self, suffix=None):
@@ -101,18 +101,63 @@ class ClassParser(object):
 
 class TemplateParser(ClassParser):
     def __init__(self, data):
-        super(ClassParser, self).__init__(self, data)
+        super(TemplateParser, self).__init__(data)
 
     def get_template_def(self):
-        return ''
+        fmt = {'name': self.data.name, 'prefix': self.data.prefix}
+        output = '#define %(name)s TEMPLATE(%(prefix)s, %(prefix)s_Params)\n' % fmt
+        output += '#define %(name)s_Class TEMPLATE(%(prefix)s, %(prefix)s_Params, Class)\n' % fmt
+
+        for m in self.data.methods:
+            fmt['method'] = m.name
+            output += '#define %(name)s_%(method)s TEMPLATE(%(name)s, %(name)s_Params, %(method)s)\n' % fmt
+
+        fmt['populate'] = 'populate'
+        output += '#define %(name)s_%(populate)s TEMPLATE(%(name)s, %(name)s_Params, %(populate)s)\n' % fmt
+        return output
+
     def get_template_undef(self):
+        fmt = {'name': self.data.name}
+        output = ''
+        output += '#undef %(name)s_T\n#undef %(name)s_T_Class\n' % fmt
+
+        for m in self.data.methods:
+            output += '#undef %s_%s\n' % (self.data.name, m.name)
+
+        output += '#undef %s_%s\n' % (self.data.name, 'populate')
+        return output
+
     def get_typenames_def(self):
+        fmt = {'name': self.data.name}
+
+        i = 0
+        output = ''
+        for t in self.data.typenames:
+            i += 1
+            fmt['i'] = i
+            fmt['typename'] = t
+            output += '#define %(typename)s T_Param(%(i)i, %(name)s_Params)' % fmt
+        return output
+
     def get_typenames_undef(self):
+        output = ''
+        fmt = {}
+        for t in self.data.typenames:
+            fmt['typename'] = t
+            output += '#undef %(typename)s' % fmt
+        return output
+
     def get_constructor_def(self):
+        pass
+
     def get_constructor_undef(self):
+        pass
 
 
 class FunctionAdapter:
+    def __init__(self):
+        pass
+
     def get_extern_decl(self, clazz, return_t, name, params):
         fmt = {'name': clazz.name, 'lower': clazz.name.lower(), 'return_t': return_t,
                'method': '%s_%s' % (clazz.name, name), 'param_list': self.get_params(params)}
@@ -132,7 +177,8 @@ class FunctionAdapter:
   return %(lower)s->vtbl->%(method)s(%(lower)s%(param_values)s);\n\
 }\n' % fmt
 
-    def get_define(self, clazz , name):
+    @staticmethod
+    def get_define(self, clazz, name):
         return '#define %(name)s_%(method)s TEMPLATE(%(name)s_ \n\n'
 
     @staticmethod

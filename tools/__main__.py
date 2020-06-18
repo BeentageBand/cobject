@@ -43,11 +43,11 @@ domain_data = DomainData(root)
 class_data = domain_data.get_class(options.classname)
 
 file_generators = [CInnerIntGenerator, CInterfaceGenerator]
-file_names = [class_data.name.lower() + '-internal.h', class_data.name.lower() + '.h']
+file_names = [class_data.prefix.lower() + '-internal.h', class_data.prefix.lower() + '.h']
 
 if hasattr(class_data, 'typenames'):
     file_generators.append(CTemplateGenerator)
-    file_names.append(class_data.name.lower() + '-template.h')
+    file_names.append(class_data.prefix.lower() + '-template.h')
 
 write_files_by_generators(options.output, class_data, file_generators, file_names)
 

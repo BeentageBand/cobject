@@ -12,7 +12,7 @@ clean :
 	rm -rf $(CSRCS:.c=.o) $(CCSRCS:.cc=.o) $(TEST)
 
 ../$(OUT)/bin/$(TEST) : $(TEST)
-	-cp -sf $(realpath $^) $@;
+	-cp -f $(realpath $^) $@;
 
 $(TEST) : $(CSRCS:.c=.o) $(CCSRCS:.cc=.o)
 	$(CPP) $(CXXFLAGS) $(SUBDIRS:%=-I ../%) -o $@ $^ $(LDFLAGS) -L../$(OUT)/lib -lcobject;

@@ -30,6 +30,7 @@ class ClassData(object):
         if None is root:
             self.type_t = 'struct'
             self.name = 'Object'
+            self.prefix = self.name
             self.isa = isa
             print('ClassData - ', self.name)
             self.constructors = []
@@ -38,6 +39,7 @@ class ClassData(object):
         else:
             self.type_t = 'union'
             self.name = root.get('name')
+            self.prefix = self.name
             self.isa = isa
             self.members = []
             self.methods = []
@@ -82,10 +84,8 @@ class TemplateData(ClassData):
         for i in self.isa:
             if hasattr(i, 'typenames'):
                 self.typenames.extend(i.typenames)
-
         self.prefix = self.name
-        for t in self.typenames:
-            self.name = self.name + '_' + t
+        self.name += '_T'
 
     @staticmethod
     def get_typenames(root):

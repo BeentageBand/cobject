@@ -7,6 +7,7 @@
 
 #include "cobject.h"
 #include <string.h>
+#include <stdio.h>
 
 static int object_compare(union Object const * const object, union Object const * const other);
 static void object_copy(union Object * const object, union Object const * const source);
@@ -19,7 +20,7 @@ int object_compare(union Object const * const object, union Object const * const
 
 void object_copy(union Object * const object, union Object const * const source)
 {
-  memcpy(object, source, object->clazz->offset);
+  memcpy(object, source, source->clazz->offset);
 }
 
 void object_delete(union Object * const object) {}
@@ -57,7 +58,7 @@ union Object * Object_cast(union Object * const object, struct Class * const tar
 void Object_delete(union Object * const object)
 {
   struct Class * deleter = object->clazz;
-  while(NULL == deleter)
+  while(NULL != deleter)
   {
     deleter->destroy(object);
     deleter = deleter->parent;
@@ -69,8 +70,8 @@ int Object_compare(union Object const * const object, union Object const * const
   if (object == other) return 0;
   if (object->clazz != other->clazz) return -1;
   
-  struct Class * comparator = object->clazz;
-  while (NULL == comparator) 
+  struct Class * comparator = other->clazz;
+  while (NULL != comparator)
   {
     comparator->compare(object, other);
     comparator = comparator->parent;
@@ -82,12 +83,15 @@ int Object_compare(union Object const * const object, union Object const * const
 void Object_copy(union Object * const object, union Object const * const source)
 {
   if (object == source) return;
-  if (object->clazz != source->clazz) return;
-  
-  struct Class * copier = object->clazz;
-  while (NULL == copier) 
+
+  struct Class * copier = source->clazz;
+  while (NULL != copier)
   {
-    copier->compare(object, source);
+    if (NULL != copier->copy)
+    {
+        copier->copy(object, source);
+        return;
+    }
     copier = copier->parent;
   }
 }
