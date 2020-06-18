@@ -32,6 +32,7 @@ void Class_populate(struct Class * const clazz, size_t const offset, struct Clas
   }
   clazz->destroy = object_delete;
   clazz->compare = object_compare;
+  clazz->copy = object_copy;
   clazz->offset = offset;
 }
 

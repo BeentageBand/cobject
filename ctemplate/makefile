@@ -12,7 +12,7 @@ clean :
 	rm -rf *.o *.lib
 
 ../$(OUT)/include/ctemplate/%.h : %.h
-	cp -sf $(realpath $^) $@;
+	cp -f $(realpath $^) $@;
 
 ../$(OUT)/include/ctemplate/ : 
 	-mkdir -p $@;
