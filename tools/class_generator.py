@@ -44,7 +44,8 @@ class CInnerIntGenerator(object):
         self.class_parser = ClassParser(data)
         self.constructor_parser = ConstructorParser(data)
         self.methods_parser = MethodParser(data)
-        self.fmt = {'upper': data.name.upper(), 'lower': data.name.lower(), 'name': data.name}
+        self.fmt = {'upper': data.name.upper(), 'lower': data.name.lower(), 'name': data.name,
+                    'prefix_lower': data.prefix.lower()}
 
     def generate(self):
         fmt = self.fmt
@@ -54,7 +55,7 @@ class CInnerIntGenerator(object):
         fmt['guard_end'] = self.class_parser.get_guard_end('INT')
         return '%(guard)s\n\
 #define %(upper)s_IMPLEMENTATION\n\n\
-#include "%(lower)s.h"\n\n\
+#include "%(prefix_lower)s.h"\n\n\
 static void %(lower)s_override(union %(name)s_Class * const %(lower)s);\n\n\
 %(class_method)s\n\
 %(methods)s\n\
@@ -65,7 +66,9 @@ class CTemplateGenerator(CInterfaceGenerator):
     def __init__(self, data):
         super(CTemplateGenerator, self).__init__(data)
         self.template_parser = TemplateParser(data)
+        self.fmt['prefix'] = data.prefix
         self.fmt['lower_prefix'] = data.prefix.lower()
+        self.fmt['upper_prefix'] = data.prefix.upper()
 
     def generate(self):
         fmt = self.fmt
@@ -75,8 +78,8 @@ class CTemplateGenerator(CInterfaceGenerator):
         fmt['typenames_undef'] = self.template_parser.get_typenames_undef()
         fmt['constructor_def'] = self.template_parser.get_constructor_def()
         fmt['constructor_undef'] = self.template_parser.get_constructor_undef()
-        return '#if !defined(%(upper)s_H) || defined(%(name)s_Params)\n\
-#ifndef %(name)s_Params\n#error "%(name)s_Params is not defined"\n#endif\n\n\
+        return '#if !defined(%(upper_prefix)s_TEMPLATE_H) || defined(%(prefix)s_Params)\n\
+#ifndef %(prefix)s_Params\n#error "%(prefix)s_Params is not defined"\n#endif\n\n\
 #include "ctemplate/ctemplate.h"\n\n\
 %(template_def)s\n\
 %(typenames_def)s\n\
@@ -85,4 +88,30 @@ class CTemplateGenerator(CInterfaceGenerator):
 %(template_undef)s\n\
 %(typenames_undef)s\n\
 %(constructor_undef)s\n\
-#endif /* %(upper)s_H */' % fmt
+#endif /* %(upper_prefix)s_TEMPLATE_H */' % fmt
+
+
+class CTemplateInternalGenerator(CInnerIntGenerator):
+    def __init__(self, data):
+        super(CTemplateInternalGenerator, self).__init__(data)
+        self.template_parser = TemplateParser(data)
+        self.fmt['prefix'] = data.prefix
+        self.fmt['lower_prefix'] = data.prefix.lower()
+        self.fmt['upper_prefix'] = data.prefix.upper()
+
+    def generate(self):
+        fmt = self.fmt
+        fmt['template_def'] = self.template_parser.get_template_def()
+        fmt['template_undef'] = self.template_parser.get_template_undef()
+        fmt['typenames_def'] = self.template_parser.get_typenames_def()
+        fmt['typenames_undef'] = self.template_parser.get_typenames_undef()
+        fmt['constructor_def'] = self.template_parser.get_constructor_def()
+        fmt['constructor_undef'] = self.template_parser.get_constructor_undef()
+        return '#ifndef %(prefix)s_Params\n#error "%(prefix)s_Params is not defined"\n#endif\n\n\
+%(template_def)s\n\
+%(typenames_def)s\n\
+%(constructor_def)s\n\
+#include "%(lower_prefix)s.c"\n\n\
+%(template_undef)s\n\
+%(typenames_undef)s\n\
+%(constructor_undef)s' % fmt

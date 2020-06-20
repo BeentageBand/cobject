@@ -1,7 +1,10 @@
-#if !defined(CONTAINER_INT_H) || defined(Container_Params)
-#define CONTAINER_INT_H
+#ifndef CONTAINER_T_H
+#define CONTAINER_T_INT_H
+#define CONTAINER_T_IMPLEMENTATION
 
-static void container_t_override(union Container_T_Class * const container);
+#include "container.h"
+
+static void container_t_override(union Container_T_Class * const container_t);
 
 union Container_T_Class * Get_Container_T_Class(void)
 {
@@ -11,10 +14,10 @@ union Container_T_Class * Get_Container_T_Class(void)
   container_t_override(&clazz);
   return &clazz;
 }
-
-T Container_T_get_shape(union Container_T * const container)
+T Container_T_get_shape(union Container_T * const container_t)
 {
-  return container->vtbl->get_shape(container);
+  return container_t->vtbl->get_shape(container_t);
 }
 
-#endif /* !define(CONTAINER_INT_H) || defined(Container_T_Params) */
+
+#endif /*CONTAINER_T_H*/

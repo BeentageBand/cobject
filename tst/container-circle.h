@@ -5,7 +5,7 @@
 typedef union Circle Circle_T;
 
 #define Container_Params Circle 
-#include "container.h"
+#include "container-template.h"
 #undef Container_Params
 
 #endif /*CONTAINER_CIRCLE_H_*/

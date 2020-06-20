@@ -1,9 +1,9 @@
-import sys, os
+import os
 from optparse import OptionParser
 from xml.etree import ElementTree, ElementInclude
 
 from .class_data import DomainData
-from .class_generator import CInnerIntGenerator, CInterfaceGenerator, CTemplateGenerator
+from .class_generator import CInnerIntGenerator, CInterfaceGenerator, CTemplateGenerator, CTemplateInternalGenerator
 
 
 def write_files_by_generators(output_path, class_data, generators=[], filenames=[]):
@@ -48,6 +48,8 @@ file_names = [class_data.prefix.lower() + '-internal.h', class_data.prefix.lower
 if hasattr(class_data, 'typenames'):
     file_generators.append(CTemplateGenerator)
     file_names.append(class_data.prefix.lower() + '-template.h')
+    file_generators.append(CTemplateInternalGenerator)
+    file_names.append(class_data.prefix.lower() + '-int-template.h')
 
 write_files_by_generators(options.output, class_data, file_generators, file_names)
 

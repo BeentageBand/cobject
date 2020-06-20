@@ -107,19 +107,20 @@ class TemplateParser(ClassParser):
         fmt = {'name': self.data.name, 'prefix': self.data.prefix}
         output = '#define %(name)s TEMPLATE(%(prefix)s, %(prefix)s_Params)\n' % fmt
         output += '#define %(name)s_Class TEMPLATE(%(prefix)s, %(prefix)s_Params, Class)\n' % fmt
+        output += '#define Get_%(name)s_Class TEMPLATE(Get, %(prefix)s, %(prefix)s_Params, Class)\n' % fmt
 
         for m in self.data.methods:
             fmt['method'] = m.name
-            output += '#define %(name)s_%(method)s TEMPLATE(%(name)s, %(name)s_Params, %(method)s)\n' % fmt
+            output += '#define %(name)s_%(method)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(method)s)\n' % fmt
 
         fmt['populate'] = 'populate'
-        output += '#define %(name)s_%(populate)s TEMPLATE(%(name)s, %(name)s_Params, %(populate)s)\n' % fmt
+        output += '#define %(name)s_%(populate)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(populate)s)\n' % fmt
         return output
 
     def get_template_undef(self):
         fmt = {'name': self.data.name}
         output = ''
-        output += '#undef %(name)s_T\n#undef %(name)s_T_Class\n' % fmt
+        output += '#undef %(name)s\n#undef %(name)s_Class\n#undef Get_%(name)s_Class\n' % fmt
 
         for m in self.data.methods:
             output += '#undef %s_%s\n' % (self.data.name, m.name)
@@ -128,7 +129,7 @@ class TemplateParser(ClassParser):
         return output
 
     def get_typenames_def(self):
-        fmt = {'name': self.data.name}
+        fmt = {'name': self.data.name, 'prefix': self.data.prefix}
 
         i = 0
         output = ''
@@ -136,7 +137,7 @@ class TemplateParser(ClassParser):
             i += 1
             fmt['i'] = i
             fmt['typename'] = t
-            output += '#define %(typename)s T_Param(%(i)i, %(name)s_Params)' % fmt
+            output += '#define %(typename)s T_Param(%(i)i, %(prefix)s_Params)' % fmt
         return output
 
     def get_typenames_undef(self):
@@ -148,10 +149,21 @@ class TemplateParser(ClassParser):
         return output
 
     def get_constructor_def(self):
-        pass
+        output = ''
+        fmt = {'name': self.data.name, 'prefix': self.data.prefix}
+        for c in self.data.constructors:
+            fmt['constructor'] = c.name
+            output += '#define %(name)s_populate_%(constructor) \
+        TEMPLATE(%(prefix)s, %(prefix)s_Params, populate, %(constructor)' % fmt
+        return output
 
     def get_constructor_undef(self):
-        pass
+        output = ''
+        fmt = {'name': self.data.name}
+        for c in self.data.constructors:
+            fmt['constructor'] = c.name
+            output += '#undef %(name)s_populate_%(constructor)' % fmt
+        return output
 
 
 class FunctionAdapter:

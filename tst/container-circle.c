@@ -2,5 +2,5 @@
 #include "container-circle.h"
 
 #define Container_Params Circle 
-#include "container.c"
+#include "container-int-template.h"
 #undef Container_Params
