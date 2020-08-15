@@ -36,9 +36,11 @@ if None is options.classname:
     parser.print_help()
     parser.error('--class is mandatory')
 
-tree = ElementTree.parse(options.input)
+os.chdir(os.path.dirname(os.path.abspath(options.input)))
+tree = ElementTree.parse(os.path.basename(options.input))
 root = tree.getroot()
 ElementInclude.include(root)
+
 domain_data = DomainData(root)
 class_data = domain_data.get_class(options.classname)
 

@@ -153,8 +153,8 @@ class TemplateParser(ClassParser):
         fmt = {'name': self.data.name, 'prefix': self.data.prefix}
         for c in self.data.constructors:
             fmt['constructor'] = c.name
-            output += '#define %(name)s_populate_%(constructor) \
-        TEMPLATE(%(prefix)s, %(prefix)s_Params, populate, %(constructor)' % fmt
+            output += '#define %(name)s_populate_%(constructor)s \
+        TEMPLATE(%(prefix)s, %(prefix)s_Params, populate, %(constructor)s' % fmt
         return output
 
     def get_constructor_undef(self):
@@ -162,7 +162,7 @@ class TemplateParser(ClassParser):
         fmt = {'name': self.data.name}
         for c in self.data.constructors:
             fmt['constructor'] = c.name
-            output += '#undef %(name)s_populate_%(constructor)' % fmt
+            output += '#undef %(name)s_populate_%(constructor)s' % fmt
         return output
 
 
