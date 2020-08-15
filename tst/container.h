@@ -1,6 +1,6 @@
-#if !defined(CONTAINER_H) || defined(Container_Params)
-#include "ctemplate.h"
-#include "cobject.h"
+#ifndef CONTAINER_T_H
+#define CONTAINER_T_H
+#include "cobject/ctemplate.h"
 
 #ifdef CONTAINER_T_IMPLEMENTATION
 #define _private

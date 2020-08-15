@@ -1,6 +1,6 @@
 #ifndef SHAPE_H
 #define SHAPE_H
-#include "cobject.h"
+#include "cobject/cobject.h"
 
 #ifdef SHAPE_IMPLEMENTATION 
 #define _private
