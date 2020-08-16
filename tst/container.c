@@ -1,10 +1,6 @@
 
 #include "container-internal.h"
 
-#define container_t_override TEMPLATE(container, Container_Params, override)
-#define container_t_delete TEMPLATE(container, Container_Params, delete)
-#define container_t_get_shape TEMPLATE(container, Container_Params, get_shape)
-
 static T container_t_get_shape(union Container_T * const container);
 
 void container_t_override(union Container_T_Class * const clazz) {
