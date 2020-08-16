@@ -80,7 +80,7 @@ class CTemplateGenerator(CInterfaceGenerator):
         fmt['constructor_undef'] = self.template_parser.get_constructor_undef()
         return '#if !defined(%(upper_prefix)s_TEMPLATE_H) || defined(%(prefix)s_Params)\n\
 #ifndef %(prefix)s_Params\n#error "%(prefix)s_Params is not defined"\n#endif\n\n\
-#include "ctemplate/ctemplate.h"\n\n\
+#include "cobject/ctemplate.h"\n\n\
 %(template_def)s\n\
 %(typenames_def)s\n\
 %(constructor_def)s\n\
@@ -101,8 +101,8 @@ class CTemplateInternalGenerator(CInnerIntGenerator):
 
     def generate(self):
         fmt = self.fmt
-        fmt['template_def'] = self.template_parser.get_template_def()
-        fmt['template_undef'] = self.template_parser.get_template_undef()
+        fmt['template_def'] = self.template_parser.get_template_def(lower_case=True)
+        fmt['template_undef'] = self.template_parser.get_template_undef(lower_case=True)
         fmt['typenames_def'] = self.template_parser.get_typenames_def()
         fmt['typenames_undef'] = self.template_parser.get_typenames_undef()
         fmt['constructor_def'] = self.template_parser.get_constructor_def()

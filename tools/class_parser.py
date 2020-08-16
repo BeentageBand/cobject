@@ -90,21 +90,22 @@ class ClassParser(object):
         if suffix is not None:
             suffix = '_' + suffix
         fmt = {'upper': self.data.name.upper(), 'suffix': '' if suffix is None else suffix}
-        return '#ifndef %(upper)s_H\n#define %(upper)s%(suffix)s_H' % fmt
+        return '#ifndef %(upper)s%(suffix)s_H\n#define %(upper)s%(suffix)s_H' % fmt
 
     def get_guard_end(self, suffix=None):
         if suffix is not None:
             suffix = '_' + suffix
         fmt = {'upper': self.data.name.upper(), 'suffix': suffix}
-        return '#endif /*%(upper)s_H*/' % fmt
+        return '#endif /*%(upper)s%(suffix)s_H*/' % fmt
 
 
 class TemplateParser(ClassParser):
     def __init__(self, data):
         super(TemplateParser, self).__init__(data)
 
-    def get_template_def(self):
-        fmt = {'name': self.data.name, 'prefix': self.data.prefix}
+    def get_template_def(self, lower_case=False):
+        fmt = {'name': self.data.name, 'name_lower': self.data.name.lower(), 'prefix': self.data.prefix,
+               'prefix_lower': self.data.prefix.lower()}
         output = '#define %(name)s TEMPLATE(%(prefix)s, %(prefix)s_Params)\n' % fmt
         output += '#define %(name)s_Class TEMPLATE(%(prefix)s, %(prefix)s_Params, Class)\n' % fmt
         output += '#define Get_%(name)s_Class TEMPLATE(Get, %(prefix)s, %(prefix)s_Params, Class)\n' % fmt
@@ -113,17 +114,25 @@ class TemplateParser(ClassParser):
             fmt['method'] = m.name
             output += '#define %(name)s_%(method)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(method)s)\n' % fmt
 
+        for m in self.data.methods if lower_case else []:
+            fmt['method'] = m.name
+            output += '#define %(name_lower)s_%(method)s TEMPLATE(%(prefix_lower)s, %(prefix)s_Params, \
+%(method)s)\n' % fmt
+
         fmt['populate'] = 'populate'
         output += '#define %(name)s_%(populate)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(populate)s)\n' % fmt
         return output
 
-    def get_template_undef(self):
+    def get_template_undef(self, lower_case=False):
         fmt = {'name': self.data.name}
         output = ''
         output += '#undef %(name)s\n#undef %(name)s_Class\n#undef Get_%(name)s_Class\n' % fmt
 
         for m in self.data.methods:
             output += '#undef %s_%s\n' % (self.data.name, m.name)
+
+        for m in self.data.methods if lower_case else []:
+            output += '#undef %s_%s\n' % (self.data.name.lower(), m.name)
 
         output += '#undef %s_%s\n' % (self.data.name, 'populate')
         return output
