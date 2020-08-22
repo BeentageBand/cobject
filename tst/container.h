@@ -3,9 +3,9 @@
 #include "cobject/ctemplate.h"
 
 #ifdef CONTAINER_T_IMPLEMENTATION 
-#define _private
+#define container_t_private
 #else
-#define _private const
+#define container_t_private const
 #endif 
 
 #ifdef __cplusplus
@@ -19,7 +19,7 @@ union Container_T_Class
     struct
     {
     struct Class Class;
-    T (* _private get_shape)(union Container_T * const container_t);
+    T (* container_t_private get_shape)(union Container_T * const container_t);
 
     };
 };
@@ -30,7 +30,7 @@ union Container_T
         struct
     {
       union Object Object;
-      T _private shape;
+      T container_t_private shape;
 
     };
 };
