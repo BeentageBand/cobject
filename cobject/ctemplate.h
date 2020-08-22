@@ -3,7 +3,7 @@
 
 #include "xmac.h"
 
-#define TEMPLATE(...) EVAL4(WHILE(CHECK, TEMPLATE_CAT, __VA_ARGS__, dummy))
+#define TEMPLATE(...) EVAL3(WHILE(CHECK, TEMPLATE_CAT, __VA_ARGS__, dummy))
 #define TEMPLATE_CAT(a, ...) CAT(a, IF( CHECK(__VA_ARGS__) )(CAT(_, __VA_ARGS__), ) )
 
 #define Member_Name(...) TEMPLATE(__VA_ARGS__)
@@ -22,6 +22,6 @@
 
 #define INDIRECT_SELECT() SELECT_PARAM
 
-#define T_Param(num, ...) EVAL4(SELECT_PARAM(num, __VA_ARGS__))
+#define T_Param(num, ...) EVAL5(SELECT_PARAM(num, __VA_ARGS__))
 
 #endif /*CTEMPLATE_H_*/
