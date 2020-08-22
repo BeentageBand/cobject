@@ -51,7 +51,7 @@ class ClassParser(object):
     def get_members_decl(self):
         member_list = ''
         for m in self.data.members:
-            member_list += '%s _private %s;\n' % (m.type_t, m.name)
+            member_list += '%s %s_private %s;\n' % (m.type_t, self.data.name.lower(), m.name)
         return member_list
 
     def get_class_method_decl(self):
@@ -95,7 +95,7 @@ class ClassParser(object):
     def get_guard_end(self, suffix=None):
         if suffix is not None:
             suffix = '_' + suffix
-        fmt = {'upper': self.data.name.upper(), 'suffix': suffix}
+        fmt = {'upper': self.data.name.upper(), 'suffix': suffix if suffix is None else ''}
         return '#endif /*%(upper)s%(suffix)s_H*/' % fmt
 
 
@@ -187,7 +187,7 @@ class FunctionAdapter:
     def get_cbk_decl(self, clazz, return_t, name, params):
         fmt = {'name': clazz.name, 'lower': clazz.name.lower(), 'return_t': return_t, 'method': name,
                'param_list': self.get_params(params)}
-        return '%(return_t)s (* _private %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % fmt
+        return '%(return_t)s (* %(lower)s_private %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % fmt
 
     def get_cbk_impl(self, clazz, return_t, name, params):
         fmt = {'name': clazz.name, 'lower': clazz.name.lower(), 'return_t': return_t, 'method': name,

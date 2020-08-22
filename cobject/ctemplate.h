@@ -22,6 +22,6 @@
 
 #define INDIRECT_SELECT() SELECT_PARAM
 
-#define T_Param(num, ...) CAT(EVAL4(SELECT_PARAM(num, __VA_ARGS__)), _T)
+#define T_Param(num, ...) EVAL4(SELECT_PARAM(num, __VA_ARGS__))
 
 #endif /*CTEMPLATE_H_*/
