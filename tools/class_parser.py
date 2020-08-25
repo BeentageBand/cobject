@@ -147,11 +147,6 @@ class TemplateParser(ClassParser):
             output += '#undef %s_%s\n' % (self.data.name.lower(), m.name)
 
         output += '#undef %s_%s\n' % (self.data.name, 'populate')
-
-        for c in self.data.constructors:
-            fmt ['method'] = c.name
-            output += '#undef %(name)s_populate_%(method)s\n' % fmt
-
         return output
 
     def get_typenames_def(self):
