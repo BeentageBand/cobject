@@ -116,10 +116,10 @@ class TemplateParser(ClassParser):
 
         if lower_case:
             fmt['method'] = 'override'
-            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_params, \
+            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_Params, \
 %(method)s)\n' % fmt
             fmt['method'] = 'delete'
-            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_params, \
+            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_Params, \
         %(method)s)\n' % fmt
         for m in self.data.methods if lower_case else []:
             fmt['method'] = m.name
