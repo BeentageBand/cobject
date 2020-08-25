@@ -168,7 +168,7 @@ class TemplateParser(ClassParser):
             i += 1
             fmt['i'] = i
             fmt['typename'] = t
-            output += '#define %(typename)s T_Param(%(i)i, %(prefix)s_Params)' % fmt
+            output += '#define %(typename)s T_Param(%(i)i, %(prefix)s_Params)\n' % fmt
         return output
 
     def get_typenames_undef(self):
@@ -176,7 +176,7 @@ class TemplateParser(ClassParser):
         fmt = {}
         for t in self.data.typenames:
             fmt['typename'] = t
-            output += '#undef %(typename)s' % fmt
+            output += '#undef %(typename)s\n' % fmt
         return output
 
     def get_constructor_def(self):
