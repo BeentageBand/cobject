@@ -51,7 +51,7 @@ class ClassParser(object):
     def get_members_decl(self):
         member_list = ''
         for m in self.data.members:
-            member_list += '%s %s_private %s;\n' % (m.type_t, self.data.name.lower(), m.name)
+            member_list += '%s _private %s;\n' % (m.type_t, m.name)
         return member_list
 
     def get_class_method_decl(self):
@@ -89,13 +89,13 @@ class ClassParser(object):
     def get_guard(self, suffix=None):
         if suffix is not None:
             suffix = '_' + suffix
-        fmt = {'upper': self.data.name.upper(), 'suffix': '' if suffix is None else suffix}
+        fmt = {'upper': self.data.name.upper(), 'suffix': suffix if suffix else ''}
         return '#ifndef %(upper)s%(suffix)s_H\n#define %(upper)s%(suffix)s_H' % fmt
 
     def get_guard_end(self, suffix=None):
         if suffix is not None:
             suffix = '_' + suffix
-        fmt = {'upper': self.data.name.upper(), 'suffix': suffix if suffix is None else ''}
+        fmt = {'upper': self.data.name.upper(), 'suffix': suffix if suffix else ''}
         return '#endif /*%(upper)s%(suffix)s_H*/' % fmt
 
 
@@ -114,6 +114,13 @@ class TemplateParser(ClassParser):
             fmt['method'] = m.name
             output += '#define %(name)s_%(method)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(method)s)\n' % fmt
 
+        if lower_case:
+            fmt['method'] = 'override'
+            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_params, \
+%(method)s)\n' % fmt
+            fmt['method'] = 'delete'
+            output += '#define %(name_lower)s_%(method)s template(%(prefix_lower)s, %(prefix)s_params, \
+        %(method)s)\n' % fmt
         for m in self.data.methods if lower_case else []:
             fmt['method'] = m.name
             output += '#define %(name_lower)s_%(method)s TEMPLATE(%(prefix_lower)s, %(prefix)s_Params, \
@@ -121,6 +128,12 @@ class TemplateParser(ClassParser):
 
         fmt['populate'] = 'populate'
         output += '#define %(name)s_%(populate)s TEMPLATE(%(prefix)s, %(prefix)s_Params, %(populate)s)\n' % fmt
+
+        for c in self.data.constructors:
+            fmt['method'] = c.name
+            output += '#define %(name)s_%(populate)s_%(method)s TEMPLATE(%(prefix)s, %(prefix)s_Params, \
+%(populate)s, %(method)s)\n' % fmt
+
         return output
 
     def get_template_undef(self, lower_case=False):
@@ -131,10 +144,19 @@ class TemplateParser(ClassParser):
         for m in self.data.methods:
             output += '#undef %s_%s\n' % (self.data.name, m.name)
 
+        if lower_case:
+            output += '#undef %s_override\n' % self.data.name.lower()
+            output += '#undef %s_delete\n' % self.data.name.lower()
+
         for m in self.data.methods if lower_case else []:
             output += '#undef %s_%s\n' % (self.data.name.lower(), m.name)
 
         output += '#undef %s_%s\n' % (self.data.name, 'populate')
+
+        for c in self.data.constructors:
+            fmt ['method'] = c.name
+            output += '#undef %(name)s_populate_%(method)s\n' % fmt
+
         return output
 
     def get_typenames_def(self):
@@ -187,7 +209,7 @@ class FunctionAdapter:
     def get_cbk_decl(self, clazz, return_t, name, params):
         fmt = {'name': clazz.name, 'lower': clazz.name.lower(), 'return_t': return_t, 'method': name,
                'param_list': self.get_params(params)}
-        return '%(return_t)s (* %(lower)s_private %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % fmt
+        return '%(return_t)s (* _private %(method)s)(union %(name)s * const %(lower)s%(param_list)s);\n' % fmt
 
     def get_cbk_impl(self, clazz, return_t, name, params):
         fmt = {'name': clazz.name, 'lower': clazz.name.lower(), 'return_t': return_t, 'method': name,
@@ -231,7 +253,7 @@ class ConstructorParser:
         default_constructor = self.function_adapter.get_extern_decl(self.data, 'void', 'populate', self.data.members)
         constructor_list = '%s\n' % default_constructor
         for c in self.data.constructors:
-            ctor = self.function_adapter.get_extern_decl(self.data, c.return_t, 'populate' + c.name, c.params)
+            ctor = self.function_adapter.get_extern_decl(self.data, c.return_t, 'populate_' + c.name, c.params)
             constructor_list += '%s\n' % ctor
         return constructor_list
 

@@ -36,6 +36,7 @@ extern "C" {\n\
 #ifdef __cplusplus\n\
 }\n\
 #endif\n\
+#undef _private\n\
 %(guard_end)s' % fmt
 
 
