@@ -67,7 +67,7 @@ class ClassParser(object):
 
     def get_class_method_impl(self):
         fmt = {'name': self.data.name, 'class_t': self.get_class_t(), 'lower_name': self.data.name.lower(),
-               'isa': 'NULL' if self.data.isa[-2].name is 'Object' else '&Get_%s_Class()->Class' % self.data.isa[
+               'isa': 'NULL' if self.data.isa[-2].name == 'Object' else '&Get_%s_Class()->Class' % self.data.isa[
                    -2].name}
         return '\
 %(class_t)s * Get_%(name)s_Class(void)\n\
