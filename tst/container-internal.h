@@ -20,4 +20,4 @@ T Container_T_get_shape(union Container_T * const container_t)
 }
 
 
-#endif /*CONTAINER_T_H*/
+#endif /*CONTAINER_T_INT_H*/

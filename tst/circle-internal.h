@@ -1,6 +1,5 @@
 #ifndef CIRCLE_INT_H
 #define CIRCLE_INT_H
-
 #define CIRCLE_IMPLEMENTATION
 
 #include "circle.h"
@@ -31,4 +30,4 @@ float Circle_get_radius(union Circle * const circle)
 }
 
 
-#endif /* CIRCLE_INT_H */
+#endif /*CIRCLE_INT_H*/

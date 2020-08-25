@@ -3,9 +3,9 @@
 #include "shape.h"
 
 #ifdef CIRCLE_IMPLEMENTATION 
-#define circle_private
+#define _private
 #else
-#define circle_private const
+#define _private const
 #endif 
 
 #ifdef __cplusplus
@@ -20,9 +20,9 @@ union Circle_Class
     struct
     {
     struct Class Class;
-    char const * (* circle_private get_name)(union Circle * const circle);
-void (* circle_private print_info)(union Circle * const circle);
-float (* circle_private get_radius)(union Circle * const circle);
+    char const * (* _private get_name)(union Circle * const circle);
+void (* _private print_info)(union Circle * const circle);
+float (* _private get_radius)(union Circle * const circle);
 
     };
 };
@@ -34,8 +34,8 @@ union Circle
     struct
     {
       union Object Object;
-      char const *  circle_private name;
-float circle_private radius;
+      char const *  _private name;
+float _private radius;
 
     };
 };
@@ -53,4 +53,5 @@ extern float Circle_get_radius(union Circle * const circle);
 #ifdef __cplusplus
 }
 #endif
+#undef _private
 #endif /*CIRCLE_H*/
