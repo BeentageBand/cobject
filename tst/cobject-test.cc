@@ -84,10 +84,12 @@ TEST(Interface, Shape) {
 
   printf("shape 0\n");
   Shape_print_info(shape[0]);
+  ASSERT_TRUE(&Circle != _cast(shape[0] , Circle));
   ASSERT_EQ(Circle_Name, Shape_get_name(shape[0]));
 
   printf("shape 1\n");
   Shape_print_info(shape[1]);
+  ASSERT_TRUE(&Rectangle != _cast(shape[1], Rectangle));
   ASSERT_EQ(Rectangle_Name, Shape_get_name(shape[1]));
 }
 

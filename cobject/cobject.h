@@ -50,7 +50,7 @@ extern void Object_copy(union Object * const object, union Object const * const 
 }
 #endif
 
-#define _cast(obj, clazz) (union Clazz *) Object_cast(&(obj)->.Object, &Get_##clazz##_Class()->Class)
+#define _cast(obj, clazz) (union clazz *) Object_cast(&(obj)->Object, &Get_##clazz##_Class()->Class)
 #define _using(clazz, method, ...) Get_##clazz##_Class()->method(__VA_ARGS__)
 #define _delete(obj) Object_delete(&(obj)->Object)
 #define _new(clazz) (clazz *) malloc(sizeof(clazz))
