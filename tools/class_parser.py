@@ -72,7 +72,7 @@ class ClassParser(object):
         return '\
 %(class_t)s * Get_%(name)s_Class(void)\n\
 {\n\
-  static %(class_t)s clazz;\n\
+  static %(class_t)s clazz = {};\n\
   if (0 != clazz.Class.offset) return &clazz;\n\
   Class_populate(&clazz.Class, sizeof(clazz), %(isa)s);\n\
   %(lower_name)s_override(&clazz);\n\

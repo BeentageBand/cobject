@@ -57,9 +57,16 @@ class CInnerIntGenerator(object):
         return '%(guard)s\n\
 #define %(upper)s_IMPLEMENTATION\n\n\
 #include "%(prefix_lower)s.h"\n\n\
+#ifdef __cplusplus\n\
+extern "C" {\n\
+#endif\n\
+\n\
 static void %(lower)s_override(union %(name)s_Class * const %(lower)s);\n\n\
 %(class_method)s\n\
 %(methods)s\n\
+#ifdef __cplusplus\n\
+}\n\
+#endif\n\
 %(guard_end)s\n' % fmt
 
 
