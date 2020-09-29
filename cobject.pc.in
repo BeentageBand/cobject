@@ -3,11 +3,10 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: C-Object
+Name: @PACKAGE_NAME@
 Description: OOP for C programming
 URL: https://github.com/BeentageBand/cobject.git
-Version: @VERSION@
-Requires: 
+Version: @PACKAGE_VERSION@
 
 Cflags: -I${includedir}
-Libs: -L${libdir} -lfoo
+Libs: -L${libdir} -lcobject-@API_VERSION@
