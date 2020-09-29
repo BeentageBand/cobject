@@ -6,6 +6,9 @@ class MemberData:
         self.type_t = root.get('type_t')
         self.name = root.get('name')
 
+    def __str__(self):
+        return self.type_t + '-' + self.name
+
 
 class MethodData:
     def __init__(self, root):
@@ -13,6 +16,9 @@ class MethodData:
         self.override = root.get('override', 'false')
         self.name = root.get('name')
         self.params = self.get_params(root)
+
+    def __str__(self):
+        return self.return_t + '-' + self.name
 
     @staticmethod
     def get_params(root):
@@ -41,15 +47,20 @@ class ClassData(object):
             self.name = root.get('name')
             self.prefix = self.name
             self.isa = isa
-            self.members = []
-            self.methods = []
+            self.members = isa[-1].members
+            self.methods = isa[-1].methods
             print('ClassData - ', self.name)
             self.constructors = self.get_constructors(root)
-            for i in isa:
-                self.members.extend(i.members)
-                self.methods.extend(i.methods)
             self.members.extend(self.get_members(root))
             self.methods.extend(self.get_methods(root))
+            mstr = ''
+            for m in self.members:
+                mstr = mstr + ', ' + str(m)
+            print('members', mstr)
+            mstr = ''
+            for m in self.methods:
+                mstr = mstr + ', ' + str(m)
+            print('methods ', mstr)
 
     @staticmethod
     def get_constructors(root):
