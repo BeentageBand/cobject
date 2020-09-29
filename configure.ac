@@ -24,7 +24,7 @@ AC_CONFIG_MACRO_DIR([m4])
 
 # Automake config files
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
-AC_CONFIG_FILES([Makefile cobject-$API_VERSION.pc:cobject.pc.in], [API_VERSION='$API_VERSION'])
+AC_CONFIG_FILES([Makefile cobject.pc])
 
 # Safety check
 AC_CONFIG_SRCDIR([cobject/cobject.c])
