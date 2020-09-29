@@ -18,6 +18,8 @@ tst/rectangle.h              \
 tst/shape.c                  \
 tst/shape.h
 
+pkgconfig_DATA = cobject-$(API_VERSION).pc
+
 unittest_CPPFLAGS = $(libgmock_main_CFLAGS)
 unittest_LDADD = $(lib_LTLIBRARIES) $(libgmock_main_LIBS)
 unittest_LDFLAGS = -no-install
