@@ -9,4 +9,4 @@ URL: https://github.com/BeentageBand/cobject.git
 Version: @PACKAGE_VERSION@
 
 Cflags: -I${includedir}
-Libs: -L${libdir} -lcobject-@API_VERSION@
+Libs: -L${libdir} -lcobject-@PACKAGE_VERSION_MAJOR@.@PACKAGE_VERSION_MINOR@.@PACKAGE_VERSION_MICRO@

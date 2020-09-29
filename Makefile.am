@@ -1,8 +1,8 @@
  ACLOCAL_AMFLAGS = -I m4 --install
 # Libraries
-lib_LTLIBRARIES = libcobject-1.0.la
-libcobject_1_0_la_SOURCES = cobject/cobject.c  cobject/cobject.h  cobject/ctemplate.h  cobject/xmac.h
-libcobject_1_0_la_LDFLAGS = -version-info 0:0:0
+lib_LTLIBRARIES = libcobject-1.0.0.la
+libcobject_1_0_0_la_SOURCES = cobject/cobject.c  cobject/cobject.h  cobject/ctemplate.h  cobject/xmac.h
+libcobject_1_0_0_la_LDFLAGS = -version-info 0:0:0
 nobase_include_HEADERS = cobject/cobject.h cobject/ctemplate.h cobject/xmac.h
 
 # Unit Tests
