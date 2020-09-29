@@ -144,6 +144,7 @@ venv.bak/
 *.m4
 .deps
 .dirstamp
+*.pc
 autom4te.cache
 build-aux
 config.status
