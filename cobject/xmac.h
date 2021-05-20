@@ -1,17 +1,17 @@
 #ifndef XMAC_H_
 #define XMAC_H_
- 
-#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+
+#define PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
 #define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
 
 #define PRIMITIVE_STR(a) #a
 #define STR(a) PRIMITIVE_STR(a)
 
-#define IFF(c) PRIMITIVE_CAT(IFF_,c)
+#define IFF(c) PRIMITIVE_CAT(IFF_, c)
 #define IFF_0(t, ...) __VA_ARGS__
 #define IFF_1(t, ...) t
 
-#define COMPL(x) PRIMITIVE_CAT(COMPL_,x)
+#define COMPL(x) PRIMITIVE_CAT(COMPL_, x)
 #define COMPL_0 1
 #define COMPL_1 0
 
@@ -40,21 +40,13 @@
 #define EVAL4(...) EVAL5(EVAL5(EVAL5(__VA_ARGS__)))
 #define EVAL5(...) __VA_ARGS__
 
-
-#define WHILE(pred, macro, ...) \
-   IF(pred(__VA_ARGS__)) \
-   ( \
-      OBSTRUCT(WHILE_INDIRECT)() \
-      ( \
-         pred, macro, macro(__VA_ARGS__) \
-      ) \
-      , \
-      __VA_ARGS__ \
-   ) \
+#define WHILE(pred, macro, ...)                                                \
+  IF(pred(__VA_ARGS__))                                                        \
+  (OBSTRUCT(WHILE_INDIRECT)()(pred, macro, macro(__VA_ARGS__)), __VA_ARGS__)
 
 #define WHILE_INDIRECT() WHILE
 
-#define DEC(num) CAT(DEC_,num)
+#define DEC(num) CAT(DEC_, num)
 
 #define DEC_1 0
 #define DEC_2 1
