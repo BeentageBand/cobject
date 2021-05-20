@@ -2,47 +2,41 @@
 #define SHAPE_H
 #include "cobject/cobject.h"
 
-#ifdef SHAPE_IMPLEMENTATION 
+#ifdef SHAPE_IMPLEMENTATION
 #define _private
 #else
 #define _private const
-#endif 
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 union Shape;
-union Shape_Class
-{
-    
-    struct
-    {
+union Shape_Class {
+
+  struct {
     struct Class Class;
-    char const * (* _private get_name)(union Shape * const shape);
-void (* _private print_info)(union Shape * const shape);
-
-    };
+    char const *(*_private get_name)(union Shape *const shape);
+    void (*_private print_info)(union Shape *const shape);
+  };
 };
 
-union Shape
-{
-    union Shape_Class * vtbl;
-        struct
-    {
-      union Object Object;
-      char const *  _private name;
-
-    };
+union Shape {
+  union Shape_Class *vtbl;
+  struct {
+    union Object Object;
+    char const *_private name;
+  };
 };
 
-extern union Shape_Class * Get_Shape_Class(void);
+extern union Shape_Class *Get_Shape_Class(void);
 
-extern void Shape_populate(union Shape * const shape, char const *  const name);
+extern void Shape_populate(union Shape *const shape, char const *const name);
 
-extern char const * Shape_get_name(union Shape * const shape);
+extern char const *Shape_get_name(union Shape *const shape);
 
-extern void Shape_print_info(union Shape * const shape);
+extern void Shape_print_info(union Shape *const shape);
 
 #ifdef __cplusplus
 }

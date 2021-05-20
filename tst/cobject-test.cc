@@ -11,14 +11,14 @@
 #include "rectangle.h"
 #include "shape.h"
 
-static char const * Circle_Name = "circle";
-static  union Circle Circle = {NULL};
+static char const *Circle_Name = "circle";
+static union Circle Circle = {NULL};
 
-static char const * Rectangle_Name = "rectangle";
+static char const *Rectangle_Name = "rectangle";
 static union Rectangle Rectangle = {NULL};
 
 TEST(ShapeClass, override) {
-  union Shape_Class * clazz = Get_Shape_Class();
+  union Shape_Class *clazz = Get_Shape_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
 
@@ -29,7 +29,7 @@ TEST(ShapeClass, override) {
 }
 
 TEST(CircleClass, override) {
-  union Circle_Class * clazz = Get_Circle_Class();
+  union Circle_Class *clazz = Get_Circle_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
 
@@ -41,7 +41,7 @@ TEST(CircleClass, override) {
 }
 
 TEST(RectangleClass, override) {
-  union Rectangle_Class * clazz = Get_Rectangle_Class();
+  union Rectangle_Class *clazz = Get_Rectangle_Class();
   ASSERT_TRUE(NULL != clazz);
   ASSERT_TRUE(NULL != clazz->Class.destroy);
 
@@ -80,11 +80,11 @@ TEST(Constructor, Rectangle) {
 }
 
 TEST(Interface, Shape) {
-  union Shape * shape[] = {&Circle.Shape, &Rectangle.Shape};
+  union Shape *shape[] = {&Circle.Shape, &Rectangle.Shape};
 
   printf("shape 0\n");
   Shape_print_info(shape[0]);
-  ASSERT_TRUE(&Circle != _cast(shape[0] , Circle));
+  ASSERT_TRUE(&Circle != _cast(shape[0], Circle));
   ASSERT_EQ(Circle_Name, Shape_get_name(shape[0]));
 
   printf("shape 1\n");
@@ -93,8 +93,7 @@ TEST(Interface, Shape) {
   ASSERT_EQ(Rectangle_Name, Shape_get_name(shape[1]));
 }
 
-TEST(Shape, equals) 
-{
+TEST(Shape, equals) {
   ASSERT_NE(0, _compare(&Circle, &Rectangle));
   ASSERT_EQ(0, _compare(&Rectangle, &Rectangle));
 }
