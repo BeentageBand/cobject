@@ -58,6 +58,14 @@ void Object_delete(union Object *const object) {
     deleter->destroy(object);
     deleter = deleter->parent;
   }
+  // This is intended to catch malloc address.
+  // free any dynamic allocations
+  void * succeed = realloc(object, 1);
+  if (succeed) {
+    free(succeed);
+  } else {
+    free(object);
+  }
 }
 
 int Object_compare(union Object const *const object,

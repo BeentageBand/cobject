@@ -97,3 +97,11 @@ TEST(Shape, equals) {
   ASSERT_NE(0, _compare(&Circle, &Rectangle));
   ASSERT_EQ(0, _compare(&Rectangle, &Rectangle));
 }
+
+
+TEST(Dynamic, new_and_delete) {
+  union Rectangle * r = _new(union Rectangle);
+  Rectangle_populate(r, Rectangle_Name, 0.1, 0.1);
+
+  _delete(r);
+}
